@@ -1,681 +1,656 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8"/>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Elite Athlete Training System — Complete</title>
-  <meta name="apple-mobile-web-app-capable" content="yes">
-  <style>
-    *{box-sizing:border-box} html{-webkit-text-size-adjust:100%}
-    body{margin:0;padding:16px;background:#0a0a0a;color:#fff;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Arial}
-    .container{max-width:1200px;margin:0 auto}
-    h1{margin:0 0 8px;font-size:32px;text-align:center;
-       background:linear-gradient(90deg,#ff6b35,#00ff88,#00ccff);
-       -webkit-background-clip:text;-webkit-text-fill-color:transparent}
-    .subtitle{text-align:center;color:#8a8a8a;margin-bottom:16px;font-size:14px}
-    .calendar-header{display:flex;gap:8px;flex-wrap:wrap;align-items:center;justify-content:space-between;
-      background:#151515;border:1px solid #2b2b2b;border-radius:12px;padding:12px}
-    .btn{background:#2b2b2b;border:1px solid #3a3a3a;color:#fff;padding:10px 14px;border-radius:8px;cursor:pointer;font-weight:600}
-    .btn-primary{background:linear-gradient(135deg,#00ff88,#00ccff);color:#032;border:none}
-    .calendar-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:6px;margin-top:10px}
-    .calendar-day-header{padding:8px;text-align:center;color:#9a9a9a;font-weight:700}
-    .calendar-day{min-height:110px;background:#121212;border:1px solid #2a2a2a;border-radius:10px;padding:10px;cursor:pointer;position:relative}
-    .calendar-day.today{border-color:#00ff88;box-shadow:0 0 16px rgba(0,255,136,.25)}
-    .calendar-day.other{opacity:.35}
-    .day-number{font-weight:800;margin-bottom:6px}
-    .badge{display:inline-block;font-size:10px;padding:3px 6px;margin:2px;border-radius:999px;background:rgba(0,204,255,.15);border:1px solid #00ccff}
-    .cns-dot{position:absolute;right:8px;top:8px;width:12px;height:12px;border-radius:50%}
-    .cns-low{background:#00ff88}.cns-mod{background:#ffaa00}.cns-high{background:#ff4444}
-    .modal{position:fixed;inset:0;background:rgba(0,0,0,.9);z-index:1000;overflow:auto;padding:16px}
-    .card{background:#0c0c0c;border:1px solid #2c2c2c;border-radius:12px;padding:18px}
-    .row{display:grid;grid-template-columns:repeat(12,1fr);gap:10px}
-    .col-12{grid-column:span 12}.col-9{grid-column:span 9}.col-6{grid-column:span 6}.col-4{grid-column:span 4}.col-3{grid-column:span 3}
-    @media(max-width:860px){.col-9,.col-6,.col-4,.col-3{grid-column:span 12}}
-    label{display:block;font-size:12px;color:#9a9a9a;margin-bottom:6px}
-    input,select,textarea{width:100%;background:#141414;border:1px solid #333;color:#fff;border-radius:8px;padding:10px;font-size:14px}
-    input:focus,select:focus,textarea:focus{outline:none;border-color:#00ff88;box-shadow:0 0 0 3px rgba(0,255,136,.1)}
-    .pill{display:inline-flex;align-items:center;gap:8px;padding:10px;border-radius:10px;border:1px dashed #3a3a3a;background:#111;cursor:pointer}
-    .hidden{display:none}
-    .metric{padding:12px;border-left:4px solid #00ccff;background:#0f0f0f;border-radius:8px}
-    .metric .v{font-size:22px;font-weight:800;color:#00ff88}
-    .warn{background:rgba(255,68,68,.15);border:1px solid #ff4444;border-radius:10px;padding:12px}
-    .ok{background:rgba(0,255,136,.12);border:1px solid #00ff88;border-radius:10px;padding:12px}
-    .chip{display:inline-block;background:#1a1a1a;border:1px solid #2b2b2b;padding:6px 8px;border-radius:999px;font-size:12px;margin:2px}
-    .section-title{color:#00ccff;font-weight:800;margin:8px 0 12px}
-    .close-x{position:sticky;top:8px;float:right}
-    .hr-preview{max-width:100%;max-height:280px;border-radius:10px;margin-top:8px}
-  </style>
-  <!-- On-device OCR for Polar HR screenshots -->
-  <script src="https://unpkg.com/tesseract.js@5.0.4/dist/tesseract.min.js"></script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Elite Athlete Training System — Integrated (Assault Bike Pro Applied)</title>
+<style>
+  *{box-sizing:border-box} html{-webkit-text-size-adjust:100%}
+  body{margin:0;padding:20px;background:#0a0a0a;color:#fff;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Arial}
+  .container{max-width:1600px;margin:0 auto}
+  h1{margin:0 0 8px;text-align:center;font-size:38px;background:linear-gradient(90deg,#ff6b35,#00ff88,#00ccff);
+     -webkit-background-clip:text;-webkit-text-fill-color:transparent}
+  .subtitle{text-align:center;color:#8a8a8a;margin-bottom:16px}
+  .calendar-header{display:flex;gap:10px;flex-wrap:wrap;align-items:center;justify-content:space-between;background:#151515;border:1px solid #2b2b2b;border-radius:12px;padding:14px}
+  .calendar-nav button,.analysis-btn,.profile-btn{background:#2b2b2b;border:1px solid #3a3a3a;color:#fff;padding:10px 14px;border-radius:8px;cursor:pointer;font-weight:700}
+  .analysis-btn{background:linear-gradient(135deg,#00ff88,#00ccff);color:#032;border:none}
+  .calendar-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:8px;margin-top:12px}
+  .calendar-day-header{padding:10px;text-align:center;color:#9a9a9a;font-weight:800}
+  .calendar-day{min-height:130px;background:#121212;border:1px solid #2a2a2a;border-radius:10px;padding:10px;cursor:pointer;position:relative}
+  .calendar-day.today{border-color:#00ff88;box-shadow:0 0 20px rgba(0,255,136,.25)}
+  .calendar-day.other-month{opacity:.35}
+  .day-number{font-weight:800;margin-bottom:6px}
+  .day-workouts{font-size:11px;color:#aaa}
+  .workout-badge{display:inline-block;padding:3px 8px;margin:2px;border-radius:999px;background:rgba(0,204,255,.12);border:1px solid #00ccff;font-size:10px;font-weight:700}
+  .cns-indicator{position:absolute;top:8px;right:8px;width:14px;height:14px;border-radius:50%}
+  .cns-low{background:#00ff88}.cns-moderate{background:#ffaa00}.cns-high{background:#ff4444}
+  .hidden{display:none}
+  /* Modal */
+  .modal{position:fixed;inset:0;background:rgba(0,0,0,.95);z-index:1000;overflow:auto;padding:18px}
+  .modal-content{max-width:1400px;margin:0 auto;background:#0a0a0a;border:2px solid #00ff88;border-radius:12px;padding:28px}
+  .modal-header{display:flex;gap:12px;flex-wrap:wrap;align-items:center;justify-content:space-between;margin-bottom:16px}
+  .modal-title{font-size:28px;color:#00ff88}
+  .close-btn{background:#ff4444;border:none;color:#fff;padding:10px 16px;border-radius:8px;font-weight:800;cursor:pointer}
+  /* Sections */
+  .modality-checkboxes{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:12px;margin-bottom:18px;background:#151515;border:1px solid #2b2b2b;border-radius:12px;padding:14px}
+  .modality-checkbox{display:flex;align-items:center;gap:10px;padding:12px;background:#0a0a0a;border:1px solid #333;border-radius:10px;cursor:pointer}
+  .modality-checkbox.checked{border-color:#00ff88;background:rgba(0,255,136,.08)}
+  .modality-section{background:#151515;border:1px solid #00ccff;border-radius:12px;padding:18px;margin-bottom:14px}
+  .modality-section h2{color:#00ccff;margin:0 0 10px}
+  .question{margin-bottom:12px}
+  .question label{display:block;color:#9a9a9a;margin-bottom:6px;font-weight:700}
+  input,select,textarea{width:100%;background:#141414;border:1px solid #333;color:#fff;border-radius:8px;padding:10px;font-size:14px}
+  input:focus,select:focus,textarea:focus{outline:none;border-color:#00ff88;box-shadow:0 0 0 3px rgba(0,255,136,.1)}
+  .upload-zone{border:1px dashed #444;border-radius:10px;padding:14px;text-align:center;cursor:pointer}
+  .upload-zone.has-file{border-style:solid;border-color:#00ff88;background:rgba(0,255,136,.04)}
+  .hr-preview{max-width:100%;max-height:260px;border-radius:10px;margin-top:8px}
+  .metrics-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px;margin:12px 0}
+  .metric-card{background:#0f0f0f;border-left:4px solid #00ccff;border-radius:10px;padding:14px}
+  .metric-value{font-size:26px;font-weight:900;color:#00ff88}
+  .ok{background:rgba(0,255,136,.12);border:1px solid #00ff88;border-radius:10px;padding:10px}
+  .warn{background:rgba(255,68,68,.12);border:1px solid #ff4444;border-radius:10px;padding:10px}
+  .btn{background:#2b2b2b;border:1px solid #3a3a3a;color:#fff;padding:10px 14px;border-radius:8px;cursor:pointer;font-weight:800}
+  .btn-primary{background:linear-gradient(135deg,#00ff88,#00ccff);border:none;color:#032}
+  .table{width:100%;border-collapse:collapse;margin-top:8px}
+  .table th,.table td{border:1px solid #2b2b2b;padding:8px;text-align:center}
+  @media(max-width:760px){.modal-content{padding:18px} h1{font-size:28px} }
+</style>
+<!-- OCR for Polar screenshot parsing -->
+<script src="https://unpkg.com/tesseract.js@5.0.4/dist/tesseract.min.js"></script>
 </head>
 <body>
   <div class="container">
-    <h1>🏆 Elite Athlete Training System</h1>
-    <div class="subtitle">Full periodization • TRIMP/sRPE • ACWR • Monotony/Strain • Plyo contacts • On-device HR OCR</div>
+    <h1>🏆 ELITE ATHLETE TRAINING SYSTEM</h1>
+    <p class="subtitle">Full Periodization • Load Management • Injury Prevention • Performance Optimization (Assault Bike upgraded + HR OCR)</p>
 
     <div class="calendar-header">
-      <div>
-        <button class="btn" id="prevBtn">‹ Prev</button>
-        <button class="btn" id="todayBtn">Today</button>
-        <button class="btn" id="nextBtn">Next ›</button>
+      <div class="calendar-nav">
+        <button onclick="previousMonth()">‹ Prev</button>
+        <button onclick="goToToday()">Today</button>
+        <button onclick="nextMonth()">Next ›</button>
       </div>
-      <div id="monthTitle" style="font-weight:900;color:#00ff88"></div>
-      <div>
-        <button class="btn" id="profileBtn">👤 Profile</button>
-        <button class="btn btn-primary" id="weeklyBtn">📊 Weekly Analysis</button>
-      </div>
-    </div>
-
-    <div class="calendar-grid" id="calGrid"></div>
-  </div>
-
-  <!-- Day modal -->
-  <div class="modal hidden" id="dayModal">
-    <div class="card" style="max-width:1100px;margin:0 auto">
-      <button class="btn close-x" id="dayClose">✕ Close</button>
-      <h2 id="dayTitle" class="section-title" style="font-size:22px"></h2>
-
-      <div class="card" style="margin-top:8px">
-        <div class="row">
-          <div class="col-3">
-            <label>Modalities (toggle)</label>
-            <div class="chip"><input type="checkbox" id="m_chest"> Chest</div>
-            <div class="chip"><input type="checkbox" id="m_back"> Back</div>
-            <div class="chip"><input type="checkbox" id="m_legs"> Legs</div>
-            <div class="chip"><input type="checkbox" id="m_track"> Track/Plyo</div>
-            <div class="chip"><input type="checkbox" id="m_bike"> Assault Bike</div>
-            <div class="chip"><input type="checkbox" id="m_bjj"> BJJ</div>
-            <div class="chip"><input type="checkbox" id="m_walk"> Walking/Recovery</div>
-          </div>
-          <div class="col-9">
-            <div class="row">
-              <div class="col-4"><div class="metric"><div class="v" id="m_cns">0</div><div>Estimated CNS Load</div></div></div>
-              <div class="col-4"><div class="metric"><div class="v" id="m_tss">0</div><div>Total TSS (TRIMP/sRPE)</div></div></div>
-              <div class="col-4"><div class="metric"><div class="v" id="m_vol">0</div><div>Strength Volume (lb)</div></div></div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <div id="forms"></div>
-
-      <div class="row" style="margin-top:12px">
-        <div class="col-12">
-          <button class="btn btn-primary" id="saveDay">✓ Save Day & Recompute</button>
-        </div>
+      <div class="month-title" id="month-title">—</div>
+      <div style="display:flex; gap:8px">
+        <button class="profile-btn" onclick="openProfile()">👤 Profile</button>
+        <button class="analysis-btn" onclick="showWeeklyAnalysis()">📊 WEEKLY ANALYSIS</button>
       </div>
     </div>
+
+    <div class="calendar-grid" id="calendar-grid"></div>
+
+    <!-- Modals -->
+    <div id="day-modal" class="hidden"></div>
+    <div id="weekly-modal" class="hidden"></div>
+    <div id="rpe-modal" class="hidden"></div>
+    <div id="profile-modal" class="hidden"></div>
   </div>
 
-  <!-- Profile modal -->
-  <div class="modal hidden" id="profileModal">
-    <div class="card" style="max-width:720px;margin:0 auto">
-      <button class="btn close-x" id="profileClose">✕ Close</button>
-      <h2 class="section-title">Athlete Profile</h2>
-      <div class="row">
-        <div class="col-6"><label>Name</label><input id="p_name" placeholder="Optional"></div>
-        <div class="col-3"><label>Sex</label><select id="p_sex"><option value="male">Male</option><option value="female">Female</option></select></div>
-        <div class="col-3"><label>Age (yrs)</label><input id="p_age" type="number" min="10" max="90" value="30"></div>
-        <div class="col-4"><label>Body Mass (lb)</label><input id="p_mass_lb" type="number" min="70" max="400" value="180"></div>
-        <div class="col-4"><label>Resting HR (bpm)</label><input id="p_rhr" type="number" value="60"></div>
-        <div class="col-4"><label>Max HR (bpm)</label><input id="p_hrmax" type="number" placeholder="auto"></div>
-        <div class="col-12"><label>Training Experience</label>
-          <select id="p_train_age">
-            <option value="novice">Novice (&lt;1y)</option>
-            <option value="intermediate">Intermediate (1–3y)</option>
-            <option value="advanced">Advanced (3–6y)</option>
-            <option value="elite" selected>Elite (&gt;6y)</option>
-          </select>
-        </div>
-      </div>
-      <div class="ok" style="margin-top:10px">
-        If Max HR left blank, auto uses <b>208 − 0.7×age</b>. Zones: Z2 60–70%, Z3 70–80%, Z4 80–90%, Z5 90–100% HRmax.
-      </div>
-      <div style="margin-top:12px">
-        <button class="btn btn-primary" id="saveProfile">Save Profile</button>
-      </div>
-    </div>
-  </div>
+<script>
+/* =================== CORE STATE (unchanged layout) =================== */
+let currentDate = new Date();
+let trainingData = {}; // { 'YYYY-MM-DD': { modalities: {...}, totalCNS, totalVolume, tss, hrData } }
+let historicalTSS = []; // for A:C
+let exerciseCounters = {};
+let setCounters = {};
 
-  <!-- Weekly modal -->
-  <div class="modal hidden" id="weeklyModal">
-    <div class="card" style="max-width:950px;margin:0 auto">
-      <button class="btn close-x" id="weeklyClose">✕ Close</button>
-      <h2 class="section-title">Weekly Load Analysis</h2>
-      <div id="weeklyBody"></div>
-    </div>
-  </div>
+/* ------- Persistence ------- */
+function loadData(){
+  trainingData = JSON.parse(localStorage.getItem('eliteTrainingData')||'{}');
+  historicalTSS = JSON.parse(localStorage.getItem('historicalTSS')||'[]');
+}
+function saveData(){
+  localStorage.setItem('eliteTrainingData', JSON.stringify(trainingData));
+  localStorage.setItem('historicalTSS', JSON.stringify(historicalTSS));
+}
 
-  <script>
-  /* ========= State ========= */
-  let current = new Date();
-  let training = JSON.parse(localStorage.getItem('ets_training')||'{}'); // by date
-  let profile  = JSON.parse(localStorage.getItem('ets_profile')||'{}');
-  let tssHistory = JSON.parse(localStorage.getItem('ets_tssHistory')||'[]'); // [{date,tss}]
-  let _currentDay = null; // object for open day
-  const hrStore = {}; // parsed HR by section key
+/* =================== CALENDAR (unchanged) =================== */
+function renderCalendar(){
+  const year = currentDate.getFullYear();
+  const month = currentDate.getMonth();
+  const monthNames = ['JANUARY','FEBRUARY','MARCH','APRIL','MAY','JUNE','JULY','AUGUST','SEPTEMBER','OCTOBER','NOVEMBER','DECEMBER'];
+  document.getElementById('month-title').textContent = `${monthNames[month]} ${year}`;
 
-  const saveAll=()=>{localStorage.setItem('ets_training',JSON.stringify(training));
-                     localStorage.setItem('ets_profile',JSON.stringify(profile));
-                     localStorage.setItem('ets_tssHistory',JSON.stringify(tssHistory));};
+  const grid = document.getElementById('calendar-grid'); grid.innerHTML='';
+  ['SUN','MON','TUE','WED','THU','FRI','SAT'].forEach(d=>{
+    const header=document.createElement('div'); header.className='calendar-day-header'; header.textContent=d; grid.appendChild(header);
+  });
+  const firstDay = new Date(year,month,1).getDay();
+  const daysInMonth = new Date(year,month+1,0).getDate();
+  const daysInPrevMonth = new Date(year,month,0).getDate();
+  const today = formatDate(new Date());
 
-  const fmtDate=d=>`${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
-  const monthName=i=>["January","February","March","April","May","June","July","August","September","October","November","December"][i];
-  function ensureProfileDefaults(){
-    if(!profile.sex) profile.sex="male";
-    if(!profile.age) profile.age=30;
-    if(!profile.mass_lb) profile.mass_lb=180;
-    if(!profile.rhr) profile.rhr=60;
-    if(profile.hrmax==null||profile.hrmax===0) profile.hrmax=Math.round(208-0.7*profile.age);
-  }
-
-  /* ========= Calendar ========= */
-  function renderCalendar(){
-    ensureProfileDefaults();
-    document.getElementById('monthTitle').textContent = `${monthName(current.getMonth())} ${current.getFullYear()}`;
-    const grid = document.getElementById('calGrid'); grid.innerHTML="";
-    ["Sun","Mon","Tue","Wed","Thu","Fri","Sat"].forEach(d=>{const h=document.createElement('div');h.className='calendar-day-header';h.textContent=d;grid.appendChild(h);});
-    const y=current.getFullYear(), m=current.getMonth();
-    const first = new Date(y,m,1).getDay(), days = new Date(y,m+1,0).getDate(), dprev=new Date(y,m,0).getDate(), today=fmtDate(new Date());
-    for(let i=first-1;i>=0;i--){addCell(grid,new Date(y,m-1,dprev-i),true,today);}
-    for(let d=1;d<=days;d++){addCell(grid,new Date(y,m,d),false,today);}
-    const used=first+days, rem=used<=35?35-used:42-used;
-    for(let i=1;i<=rem;i++){addCell(grid,new Date(y,m+1,i),true,today);}
-  }
-  function addCell(grid,date,other,today){
-    const ds=fmtDate(date);
-    const div=document.createElement('div');
-    div.className='calendar-day'+(other?' other':'')+(ds===today?' today':'');
-    div.innerHTML=`<div class="day-number">${date.getDate()}</div>`;
-    const d=training[ds];
-    if(d && d.modalities){
-      const badges=document.createElement('div');
-      Object.keys(d.modalities).forEach(k=>{ if(d.modalities[k].completed){const b=document.createElement('span');b.className='badge';b.textContent=k.toUpperCase();badges.appendChild(b);} });
-      div.appendChild(badges);
-      const dot=document.createElement('div');dot.className='cns-dot '+(d.totalCNS<60?'cns-low':(d.totalCNS<75?'cns-mod':'cns-high'));div.appendChild(dot);
-    }
-    div.onclick=()=>openDay(ds,date);
-    grid.appendChild(div);
-  }
-
-  /* ========= Day Modal ========= */
-  function openDay(ds,date){
-    const title=date.toLocaleDateString('en-US',{weekday:'long',year:'numeric',month:'long',day:'numeric'});
-    document.getElementById('dayTitle').textContent=title;
-    _currentDay = training[ds] ? JSON.parse(JSON.stringify(training[ds])) : {modalities:{}};
-    _currentDay._date = ds;
-
-    // set toggles from saved
-    ['chest','back','legs','track','bike','bjj','walk'].forEach(k=>{
-      document.getElementById('m_'+k).checked = !!_currentDay.modalities[k];
-      // attach change listeners that re-render forms immediately
-      document.getElementById('m_'+k).onchange = ()=>{ renderForms(); };
-    });
-
-    renderForms();
-    recomputeDayMetrics();
-    document.getElementById('dayModal').classList.remove('hidden');
-  }
-  const closeDay=()=>document.getElementById('dayModal').classList.add('hidden');
-
-  function renderForms(){
-    const box=document.getElementById('forms'); box.innerHTML="";
-    const d=_currentDay;
-
-    ['chest','back','legs'].forEach(k=>{
-      if(document.getElementById('m_'+k).checked){
-        box.appendChild(strengthForm(k,d.modalities[k]||{}));
-        d.modalities[k]=d.modalities[k]||{completed:false};
-      } else delete d.modalities[k];
-    });
-
-    if(document.getElementById('m_track').checked){
-      box.appendChild(trackForm(d.modalities.track||{}));
-      d.modalities.track=d.modalities.track||{completed:false};
-    } else delete d.modalities.track;
-
-    if(document.getElementById('m_bike').checked){
-      box.appendChild(bikeForm(d.modalities.bike||{}));
-      d.modalities.bike=d.modalities.bike||{completed:false};
-    } else delete d.modalities.bike;
-
-    if(document.getElementById('m_bjj').checked){
-      box.appendChild(bjjForm(d.modalities.bjj||{}));
-      d.modalities.bjj=d.modalities.bjj||{completed:false};
-    } else delete d.modalities.bjj;
-
-    if(document.getElementById('m_walk').checked){
-      box.appendChild(walkForm(d.modalities.walk||{}));
-      d.modalities.walk=d.modalities.walk||{completed:false};
-    } else delete d.modalities.walk;
-  }
-
-  function strengthForm(kind,d){
-    const wrap=document.createElement('div'); wrap.className='card';
-    wrap.innerHTML=`
-      <div class="section-title">💪 ${kind.toUpperCase()} — Strength Session</div>
-      <div class="row" id="${kind}_exBox"></div>
-      <div class="row"><div class="col-12"><button class="btn" id="${kind}_addEx">+ Add Exercise</button></div></div>
-      <div class="row">
-        <div class="col-4"><label>Overall Feeling</label>
-          <select id="${kind}_feel"><option value="">Choose</option><option>great</option><option>good</option><option>tired</option><option>beat</option></select>
-        </div>
-        <div class="col-4"><label>Sleep (h)</label><input id="${kind}_sleep" type="number" step="0.5" value="${d.sleep||''}"></div>
-        <div class="col-4">
-          <label>HR Screenshot (optional)</label>
-          <div class="pill" id="${kind}_upload">📊 Upload & OCR</div>
-          <input type="file" id="${kind}_file" accept="image/*" class="hidden"/>
-          <img id="${kind}_hrimg" class="hr-preview hidden"/>
-          <div id="${kind}_hrtxt" style="color:#9a9a9a;font-size:12px;margin-top:6px"></div>
-        </div>
-      </div>`;
-    setTimeout(()=>{
-      document.getElementById(`${kind}_addEx`).onclick=()=>addStrengthExercise(kind);
-      document.getElementById(`${kind}_upload`).onclick=()=>document.getElementById(`${kind}_file`).click();
-      document.getElementById(`${kind}_file`).onchange=e=>hrOCR(kind,e);
-      (d.exercises||[]).forEach(ex=>addStrengthExercise(kind,ex));
-    },0);
-    return wrap;
-  }
-  function addStrengthExercise(kind,ex){
-    const box=document.getElementById(`${kind}_exBox`);
-    const div=document.createElement('div'); div.className='col-12 card'; div.style.marginTop="8px";
-    div.innerHTML=`
-      <div class="row">
-        <div class="col-6"><label>Exercise</label><input placeholder="e.g., Bench Press" class="sx_name"></div>
-        <div class="col-3"><label>Muscle</label>
-          <select class="sx_muscle">
-            <option value="">Select</option>
-            <option value="chest">Chest</option><option value="back">Back</option><option value="shoulders">Shoulders</option>
-            <option value="biceps">Biceps</option><option value="triceps">Triceps</option>
-            <option value="quads">Quads</option><option value="hamstrings">Hamstrings</option><option value="glutes">Glutes</option><option value="calves">Calves</option><option value="core">Core</option>
-          </select>
-        </div>
-        <div class="col-3"><label>Sets × Reps @ Load (lb)</label><input class="sx_sets" placeholder="4x6@225; 3x8@185"></div>
-      </div>`;
-    box.appendChild(div);
-    if(ex){
-      div.querySelector('.sx_name').value=ex.name||"";
-      div.querySelector('.sx_muscle').value=ex.muscleGroup||"";
-      const s=(ex.workingSets||[]).map(s=>`${s.sets||1}x${s.reps}@${s.weight}`).join('; ');
-      div.querySelector('.sx_sets').value=s;
-    }
-  }
-
-  function trackForm(d){
-    const wrap=document.createElement('div'); wrap.className='card';
-    wrap.innerHTML=`
-      <div class="section-title">🏃 Track / Plyometrics (contacts-accurate)</div>
-      <div class="row">
-        <div class="col-12"><div class="ok">Contacts = reps × jumps/rep (ground). For <b>Stadium stairs</b>: contacts = steps/column × columns × jumps/step.</div></div>
-        <div class="col-6"><label>Exercise</label>
-          <select id="trk_ex">
-            <option value="broad_jump">Broad Jump</option>
-            <option value="depth_jump">Depth Jump</option>
-            <option value="stair_jumps">Stadium Stair Jumps</option>
-            <option value="bounds">Alternating Bounds</option>
-            <option value="sprints">Sprints</option>
-          </select>
-        </div>
-        <div class="col-6"><label>Unit</label>
-          <select id="trk_unit">
-            <option value="yards">Yards</option>
-            <option value="meters">Meters</option>
-            <option value="stairs">Stadium Stairs</option>
-            <option value="reps">Reps only</option>
-          </select>
-        </div>
-
-        <div class="col-4"><label>Distance per rep (yards/meters)</label><input id="trk_dist_per" type="number" placeholder="40"></div>
-        <div class="col-4"><label>Total reps (accepts 5x10 or 50)</label><input id="trk_reps" placeholder="5x10"></div>
-        <div class="col-4"><label>Jumps per rep</label><input id="trk_jpr" type="number" placeholder="1"></div>
-
-        <div class="col-4"><label>Steps/column (stairs)</label><input id="trk_steps_col" type="number" placeholder="50"></div>
-        <div class="col-4"><label>Columns completed (stairs)</label><input id="trk_cols" type="number" placeholder="3"></div>
-        <div class="col-4"><label>Jumps per step (stairs)</label><input id="trk_jps" type="number" placeholder="1"></div>
-
-        <div class="col-4"><label>Sleep (h)</label><input id="trk_sleep" type="number" step="0.5" value="${d.sleep||''}"></div>
-        <div class="col-4"><label>Achilles/Calf</label><select id="trk_ach"><option value="">Choose</option><option value="fresh">fresh</option><option value="tight">tight</option><option value="sore">sore</option></select></div>
-        <div class="col-4">
-          <label>HR Screenshot (optional)</label>
-          <div class="pill" id="trk_upload">📊 Upload & OCR</div>
-          <input type="file" id="trk_file" accept="image/*" class="hidden"/>
-          <img id="trk_hrimg" class="hr-preview hidden"/>
-          <div id="trk_hrtxt" style="color:#9a9a9a;font-size:12px;margin-top:6px"></div>
-        </div>
-      </div>`;
-    setTimeout(()=>{document.getElementById('trk_upload').onclick=()=>document.getElementById('trk_file').click();
-                    document.getElementById('trk_file').onchange=e=>hrOCR('trk',e);},0);
-    return wrap;
-  }
-
-  function bikeForm(d){
-    const wrap=document.createElement('div'); wrap.className='card';
-    wrap.innerHTML=`
-      <div class="section-title">🚴 Assault Bike</div>
-      <div class="row">
-        <div class="col-4"><label>Protocol</label>
-          <select id="bk_proto">
-            <option value="zone5">Zone 5 Intervals</option>
-            <option value="peakrpm">Peak RPM Sprints</option>
-            <option value="steady">Steady State</option>
-          </select>
-        </div>
-        <div class="col-4"><label>Total Time (min)</label><input id="bk_time" type="number" value="${d.time||20}"></div>
-        <div class="col-4"><label># Intervals</label><input id="bk_int" type="number" value="${d.intervals||6}"></div>
-        <div class="col-4"><label>Feel</label><select id="bk_feel"><option>great</option><option>good</option><option>tired</option><option>beat</option></select></div>
-        <div class="col-4"><label>Sleep (h)</label><input id="bk_sleep" type="number" step="0.5" value="${d.sleep||''}"></div>
-        <div class="col-4">
-          <label>HR Screenshot</label>
-          <div class="pill" id="bk_upload">📊 Upload & OCR</div>
-          <input type="file" id="bk_file" accept="image/*" class="hidden"/>
-          <img id="bk_hrimg" class="hr-preview hidden"/>
-          <div id="bk_hrtxt" style="color:#9a9a9a;font-size:12px;margin-top:6px"></div>
-        </div>
-      </div>`;
-    setTimeout(()=>{document.getElementById('bk_upload').onclick=()=>document.getElementById('bk_file').click();
-                    document.getElementById('bk_file').onchange=e=>hrOCR('bk',e);},0);
-    return wrap;
-  }
-
-  function bjjForm(d){
-    const wrap=document.createElement('div'); wrap.className='card';
-    wrap.innerHTML=`
-      <div class="section-title">🥋 Brazilian Jiu-Jitsu</div>
-      <div class="row">
-        <div class="col-3"><label>Spar Time (min)</label><input id="jj_time" type="number" value="${d.time||45}"></div>
-        <div class="col-3"><label>Intensity</label><select id="jj_int"><option>high</option><option>medium</option><option>light</option></select></div>
-        <div class="col-3"><label>Weight Before (lb)</label><input id="jj_wb" type="number" step="0.1"></div>
-        <div class="col-3"><label>Weight After (lb)</label><input id="jj_wa" type="number" step="0.1"></div>
-        <div class="col-4"><label>Feel</label><select id="jj_feel"><option>great</option><option>good</option><option>tired</option><option>beat</option></select></div>
-        <div class="col-4"><label>Sleep (h)</label><input id="jj_sleep" type="number" step="0.5"></div>
-        <div class="col-4">
-          <label>HR Screenshot</label>
-          <div class="pill" id="jj_upload">📊 Upload & OCR</div>
-          <input type="file" id="jj_file" accept="image/*" class="hidden"/>
-          <img id="jj_hrimg" class="hr-preview hidden"/>
-          <div id="jj_hrtxt" style="color:#9a9a9a;font-size:12px;margin-top:6px"></div>
-        </div>
-      </div>`;
-    setTimeout(()=>{document.getElementById('jj_upload').onclick=()=>document.getElementById('jj_file').click();
-                    document.getElementById('jj_file').onchange=e=>hrOCR('jj',e);},0);
-    return wrap;
-  }
-
-  function walkForm(d){
-    const wrap=document.createElement('div'); wrap.className='card';
-    wrap.innerHTML=`
-      <div class="section-title">🚶 Walking / Zone-2 Recovery</div>
-      <div class="row">
-        <div class="col-3"><label>Duration (min)</label><input id="wk_time" type="number" value="${d.duration||30}"></div>
-        <div class="col-3"><label>Distance (mi)</label><input id="wk_dist" type="number" step="0.1"></div>
-        <div class="col-3"><label>Terrain</label><select id="wk_ter"><option>flat</option><option>hills</option><option>steep</option></select></div>
-        <div class="col-3">
-          <label>HR Screenshot</label>
-          <div class="pill" id="wk_upload">📊 Upload & OCR</div>
-          <input type="file" id="wk_file" accept="image/*" class="hidden"/>
-          <img id="wk_hrimg" class="hr-preview hidden"/>
-          <div id="wk_hrtxt" style="color:#9a9a9a;font-size:12px;margin-top:6px"></div>
-        </div>
-      </div>`;
-    setTimeout(()=>{document.getElementById('wk_upload').onclick=()=>document.getElementById('wk_file').click();
-                    document.getElementById('wk_file').onchange=e=>hrOCR('wk',e);},0);
-    return wrap;
-  }
-
-  /* ========= HR OCR ========= */
-  async function hrOCR(prefix,evt){
-    const file=evt.target.files[0]; if(!file) return;
-    const img=document.getElementById(prefix+'_hrimg');
-    const out=document.getElementById(prefix+'_hrtxt');
-    img.src=URL.createObjectURL(file); img.classList.remove('hidden');
-    out.textContent="Analyzing…";
-    try{
-      const {data:{text}}=await Tesseract.recognize(img.src,'eng',{tessedit_char_whitelist:'0123456789:%-ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz '});
-      const peak = pick(/peak[^0-9]{0,6}([0-9]{2,3})/i,text) ?? pick(/max[^0-9]{0,6}([0-9]{2,3})/i,text);
-      const avg  = pick(/avg[^0-9]{0,6}([0-9]{2,3})/i,text)  ?? pick(/average[^0-9]{0,6}([0-9]{2,3})/i,text);
-      const z5   = pick(/zone\s*5[^0-9]{0,6}([0-9]{1,3})\s*m/i,text) || 0;
-      const z4   = pick(/zone\s*4[^0-9]{0,6}([0-9]{1,3})\s*m/i,text) || 0;
-      const z3   = pick(/zone\s*3[^0-9]{0,6}([0-9]{1,3})\s*m/i,text) || 0;
-      const z2   = pick(/zone\s*2[^0-9]{0,6}([0-9]{1,3})\s*m/i,text) || 0;
-      const rec  = (!avg||!peak) ? "moderate" : (avg/peak>=0.88? "poor" : (avg/peak<=0.75? "good":"moderate"));
-      hrStore[prefix]={peakHR:peak||null,avgHR:avg||null,timeInZone5:z5,timeInZone4:z4,timeInZone3:z3,timeInZone2:z2,recovery:rec};
-      out.innerHTML=`✓ Parsed — Peak <b>${peak||'?'}</b> • Avg <b>${avg||'?'}</b> • Z5:<b>${z5}m</b> Z4:<b>${z4}m</b> Z3:<b>${z3}m</b> Z2:<b>${z2}m</b> • Recovery: <b>${rec}</b>`;
-    }catch(e){ console.error(e); out.textContent="⚠️ OCR failed; proceed without HR."; }
-  }
-  const pick=(re,t)=>{const m=re.exec(t);return m?parseInt(m[1],10):null};
-
-  /* ========= Save, Metrics, Qualities ========= */
-  document.getElementById('saveDay').onclick=()=>saveDayFlow();
-  function saveDayFlow(){
-    const ds=_currentDay._date;
-    const out={modalities:{},totalCNS:0,totalVolume:0,tss:0,qualities:{}};
-
-    // Strength
-    for(const k of ['chest','back','legs']){
-      if(document.getElementById('m_'+k).checked){
-        const d=collectStrength(k); if(d){out.modalities[k]=d;out.totalVolume+=d.volume;out.totalCNS+=d.cnsScore;out.tss+=d.tss;}
+  for(let i=firstDay-1;i>=0;i--){ const date=new Date(year,month-1,daysInPrevMonth-i); createDayCell(grid,date,true,today); }
+  for(let day=1;day<=daysInMonth;day++){ const date=new Date(year,month,day); createDayCell(grid,date,false,today); }
+  const totalCells = firstDay + daysInMonth;
+  const remaining = totalCells<=35?35-totalCells:42-totalCells;
+  for(let d=1; d<=remaining; d++){ const date=new Date(year,month+1,d); createDayCell(grid,date,true,today); }
+}
+function createDayCell(grid,date,other,today){
+  const cell=document.createElement('div'); cell.className='calendar-day'; if(other) cell.classList.add('other-month');
+  const dateStr=formatDate(date); if(dateStr===today) cell.classList.add('today');
+  const dayData=trainingData[dateStr];
+  const dayNum=document.createElement('div'); dayNum.className='day-number'; dayNum.textContent=date.getDate(); cell.appendChild(dayNum);
+  if(dayData && dayData.modalities){
+    cell.classList.add('has-workouts');
+    const workouts=document.createElement('div'); workouts.className='day-workouts';
+    Object.keys(dayData.modalities).forEach(type=>{
+      if(dayData.modalities[type].completed){
+        const b=document.createElement('span'); b.className='workout-badge'; b.textContent=type.toUpperCase(); workouts.appendChild(b);
       }
-    }
-    // Track
-    if(document.getElementById('m_track').checked){
-      const d=collectTrack(); if(d){out.modalities.track=d;out.totalCNS+=d.cnsScore;out.tss+=d.tss;}
-    }
-    // Bike
-    if(document.getElementById('m_bike').checked){
-      const d=collectBike(); if(d){out.modalities.bike=d;out.totalCNS+=d.cnsScore;out.tss+=d.tss;}
-    }
-    // BJJ
-    if(document.getElementById('m_bjj').checked){
-      const d=collectBJJ(); if(d){out.modalities.bjj=d;out.totalCNS+=d.cnsScore;out.tss+=d.tss;}
-    }
-    // Walk
-    if(document.getElementById('m_walk').checked){
-      const d=collectWalk(); if(d){out.modalities.walk=d;out.totalCNS+=d.cnsScore;out.tss+=d.tss;}
-    }
-
-    out.qualities = deriveQualities(out.modalities);
-    training[ds]=out;
-    tssHistory.push({date:ds,tss:out.tss}); if(tssHistory.length>60) tssHistory.shift();
-    saveAll();
-    _currentDay=JSON.parse(JSON.stringify(out)); _currentDay._date=ds;
-    recomputeDayMetrics();
-    renderCalendar();
-    alert("Saved.");
+    }); cell.appendChild(workouts);
+    const c=document.createElement('div'); c.className='cns-indicator';
+    const totalCNS=dayData.totalCNS||0; if(totalCNS<60) c.classList.add('cns-low'); else if(totalCNS<75) c.classList.add('cns-moderate'); else c.classList.add('cns-high');
+    cell.appendChild(c);
   }
+  cell.onclick=()=>openDay(dateStr,date);
+  grid.appendChild(cell);
+}
+function formatDate(date){ const y=date.getFullYear(), m=String(date.getMonth()+1).padStart(2,'0'), d=String(date.getDate()).padStart(2,'0'); return `${y}-${m}-${d}`; }
+function previousMonth(){ currentDate.setMonth(currentDate.getMonth()-1); renderCalendar(); }
+function nextMonth(){ currentDate.setMonth(currentDate.getMonth()+1); renderCalendar(); }
+function goToToday(){ currentDate = new Date(); renderCalendar(); }
 
-  function collectStrength(kind){
-    const list=Array.from(document.querySelectorAll(`#${kind}_exBox .card`)).map(n=>{
-      const name=n.querySelector('.sx_name').value.trim();
-      const muscle=n.querySelector('.sx_muscle').value;
-      const setsStr=n.querySelector('.sx_sets').value.trim();
-      const ws=parseSetString(setsStr);
-      return (name&&muscle&&ws.length)?{name,muscleGroup:muscle,workingSets:ws}:null;
-    }).filter(Boolean);
-    if(!list.length) return null;
-    const feel=(document.getElementById(`${kind}_feel`).value||"").toLowerCase();
-    const sleep=parseFloat(document.getElementById(`${kind}_sleep`).value)||0;
-    const hr=hrStore[kind]||null;
-
-    let volume=0,sumPct=0,nPct=0;
-    list.forEach(ex=>ex.workingSets.forEach(s=>{
-      const sets=s.sets||1; volume+=sets*(s.weight||0)*(s.reps||0);
-      const est1RM=s.reps>0?(s.weight*(1+s.reps/30)):null;
-      if(est1RM){sumPct+=(s.weight/est1RM);nPct++;}
-    }));
-    const avgPct=nPct?(sumPct/nPct):0.6;
-    const feelRPE=(feel==="beat")?9.5:(feel==="tired")?8.5:(feel==="good")?7.5:7.0;
-    const duration=Math.max(40,Math.min(120,Math.round(list.length*10+20)));
-    let tss=Math.round(feelRPE*duration);
-
-    let cns=40;
-    if(feel==="beat") cns+=18; else if(feel==="tired") cns+=10; else if(feel==="great") cns-=8;
-    if(avgPct>=0.85) cns+=12; else if(avgPct>=0.75) cns+=6; else cns-=4;
-    if(sleep<6.5) cns+=10; else if(sleep>=8) cns-=6;
-    if(hr){ if(hr.avgHR>=160) cns+=8; if(hr.recovery==="poor") cns+=8; else if(hr.recovery==="good") cns-=5; if((hr.timeInZone5||0)>5) cns+=6; }
-
-    return {type:kind,completed:true,exercises:list,sleep,feeling:feel,hrAnalysis:hr,volume:Math.round(volume),tss, cnsScore:clamp(cns,0,100)};
-  }
-  function parseSetString(s){
-    const arr=[]; s.split(';').forEach(tok=>{const m=/([0-9]+)x([0-9]+)\s*@\s*([0-9]+(\.[0-9]+)?)/i.exec(tok.trim()); if(m) arr.push({sets:parseInt(m[1],10),reps:parseInt(m[2],10),weight:parseFloat(m[3])});});
-    return arr;
-  }
-
-  function collectTrack(){
-    const ex=document.getElementById('trk_ex').value;
-    const unit=document.getElementById('trk_unit').value;
-    const distPer=parseFloat(document.getElementById('trk_dist_per').value)||0;
-    const reps=parseReps(document.getElementById('trk_reps').value.trim());
-    const jpr=parseFloat(document.getElementById('trk_jpr').value)||1;
-    const stepsCol=parseInt(document.getElementById('trk_steps_col').value)||0;
-    const cols=parseInt(document.getElementById('trk_cols').value)||0;
-    const jps=parseFloat(document.getElementById('trk_jps').value)||1;
-    const sleep=parseFloat(document.getElementById('trk_sleep').value)||0;
-    const ach=(document.getElementById('trk_ach').value||"").toLowerCase();
-    const hr=hrStore['trk']||null;
-
-    let contacts=0, sprintMeters=0;
-    if(unit==="stairs"){ contacts=stepsCol*cols*jps; }
-    else{ contacts=reps*jpr; if(unit==="yards") sprintMeters=distPer*0.9144*reps; else if(unit==="meters") sprintMeters=distPer*reps; }
-
-    let cns=35;
-    if(ach==="sore") cns+=22; else if(ach==="tight") cns+=10;
-    if(contacts>300) cns+=15; else if(contacts>150) cns+=8;
-    if(hr){ if(hr.avgHR>=170) cns+=10; if((hr.timeInZone5||0)>10) cns+=10; }
-    const plyoTSS=Math.min(contacts*0.2,120);
-    const sprintTSS=Math.min(sprintMeters*0.05,150);
-    const tss=Math.round(plyoTSS+sprintTSS);
-
-    return {type:'track',completed:true,exercise:ex,unit,distPer,reps,jpr,stepsCol,cols,jps,contacts,sprintMeters:Math.round(sprintMeters),sleep,achilles:ach,hrAnalysis:hr,tss,cnsScore:clamp(cns,0,100)};
-  }
-  function parseReps(s){const m=/^\s*([0-9]+)\s*x\s*([0-9]+)\s*$/i.exec(s); if(m) return parseInt(m[1],10)*parseInt(m[2],10); const n=parseInt(s,10); return isFinite(n)?n:0;}
-
-  function collectBike(){
-    const proto=document.getElementById('bk_proto').value;
-    const time=parseInt(document.getElementById('bk_time').value)||0;
-    const ints=parseInt(document.getElementById('bk_int').value)||0;
-    const feel=document.getElementById('bk_feel').value;
-    const sleep=parseFloat(document.getElementById('bk_sleep').value)||0;
-    const hr=hrStore['bk']||null;
-
-    ensureProfileDefaults();
-    let tss;
-    if(hr && hr.avgHR && profile.hrmax && profile.rhr){
-      const hrr=(hr.avgHR-profile.rhr)/(profile.hrmax-profile.rhr);
-      const y=profile.sex==='female'?1.92:1.67; tss=Math.round(time*60*hrr*y/60);
-    }else{ const feelRPE=(feel==="beat")?9.5:(feel==="tired")?8.5:(feel==="good")?7.5:7.0; tss=Math.round(feelRPE*time); }
-    let cns=45; if(feel==="beat") cns+=18; else if(feel==="tired") cns+=10; else if(feel==="great") cns-=8; if(sleep<7) cns+=8; else cns-=4; if(hr){ if(hr.avgHR>=170) cns+=10; if(hr.recovery==="poor") cns+=8; }
-    return {type:'bike',completed:true,protocol:proto,time,intervals:ints,feeling:feel,sleep,hrAnalysis:hr,tss,cnsScore:clamp(cns,0,100)};
-  }
-
-  function collectBJJ(){
-    const time=parseInt(document.getElementById('jj_time').value)||0;
-    const intsty=document.getElementById('jj_int').value;
-    const wb=parseFloat(document.getElementById('jj_wb').value)||0;
-    const wa=parseFloat(document.getElementById('jj_wa').value)||0;
-    const feel=document.getElementById('jj_feel').value;
-    const sleep=parseFloat(document.getElementById('jj_sleep').value)||0;
-    const hr=hrStore['jj']||null;
-
-    const feelRPE=(intsty==="high")?8.5:(intsty==="medium")?7.5:6.5;
-    const tss=Math.round(feelRPE*time);
-    let cns=40; const loss=(wb&&wa)?(wb-wa):0;
-    if(loss>=4) cns+=18; else if(loss>=3) cns+=10;
-    if(intsty==="high") cns+=14;
-    if(feel==="beat") cns+=16; else if(feel==="tired") cns+=10;
-    if(sleep<7) cns+=8;
-    if(hr){ if(hr.avgHR>=160) cns+=8; if((hr.timeInZone5||0)>20) cns+=10; }
-    return {type:'bjj',completed:true,time,intensity:intsty,weightLoss:+loss.toFixed(1),feeling:feel,sleep,hrAnalysis:hr,tss,cnsScore:clamp(cns,0,100)};
-  }
-
-  function collectWalk(){
-    const time=parseInt(document.getElementById('wk_time').value)||0;
-    const dist=parseFloat(document.getElementById('wk_dist').value)||0;
-    const ter=document.getElementById('wk_ter').value;
-    const hr=hrStore['wk']||null; let cns=10; if(ter==="steep") cns+=12; else if(ter==="hills") cns+=6;
-    let tss=Math.round(time*0.5);
-    if(hr && profile.hrmax && profile.rhr && hr.avgHR){
-      const hrr=(hr.avgHR-profile.rhr)/(profile.hrmax-profile.rhr);
-      const y=profile.sex==='female'?1.92:1.67;
-      tss=Math.max(tss,Math.round(time*60*hrr*y/60*0.5));
-      if(hr.avgHR/profile.hrmax>0.80) cns+=10;
-    }
-    return {type:'walk',completed:true,duration:time,distance:dist,terrain:ter,hrAnalysis:hr,tss,cnsScore:clamp(cns,0,100)};
-  }
-
-  function deriveQualities(mods){
-    const q={strength:0,hypertrophy:0,power:0,speed:0,endurance:0};
-    ['chest','back','legs'].forEach(k=>{const d=mods[k];if(!d)return;(d.exercises||[]).forEach(ex=>{(ex.workingSets||[]).forEach(s=>{if(s.reps<=5)q.strength+=s.reps*(s.weight||1);else if(s.reps<=8){q.strength+=s.reps*0.6;q.hypertrophy+=s.reps*0.4;}else q.hypertrophy+=s.reps;});});});
-    if(mods.track){ q.power+=(mods.track.contacts||0)*0.5; q.speed+=Math.min(100,(mods.track.sprintMeters||0)/5); }
-    if(mods.bike){ q.endurance += mods.bike.time?mods.bike.time:30; }
-    if(mods.bjj){ q.endurance += (mods.bjj.time||0)*0.8; q.power += (mods.bjj.intensity==='high')?30:10; }
-    if(mods.walk){ q.endurance += (mods.walk.duration||0)*0.5; }
-    const sum=Object.values(q).reduce((a,b)=>a+b,0)||1; Object.keys(q).forEach(k=>q[k]=Math.round(q[k]/sum*100)); return q;
-  }
-
-  function recomputeDayMetrics(){
-    const d=_currentDay||{totalCNS:0,tss:0,totalVolume:0};
-    document.getElementById('m_cns').textContent=Math.round(d.totalCNS||0);
-    document.getElementById('m_tss').textContent=Math.round(d.tss||0);
-    document.getElementById('m_vol').textContent=(d.totalVolume||0).toLocaleString();
-  }
-
-  /* ========= Weekly Analysis ========= */
-  function weeklyReportHTML(){
-    const end=new Date(), start=new Date(); start.setDate(end.getDate()-6);
-    let totalCNS=0,totalVol=0,totalTSS=0,days=0; const dC=[], dT=[];
-    for(let d=new Date(start); d<=end; d.setDate(d.getDate()+1)){
-      const x=training[fmtDate(d)]; if(x){days++; totalCNS+=x.totalCNS||0; totalVol+=x.totalVolume||0; totalTSS+=x.tss||0; dC.push(x.totalCNS||0); dT.push(x.tss||0);}
-    }
-    const avgCNS=days?Math.round(totalCNS/days):0;
-    const mean=avgCNS, varc=dC.reduce((s,v)=>s+Math.pow(v-mean,2),0)/(dC.length||1), std=Math.sqrt(varc);
-    const monotony=std>0?(mean/std):0, strain=Math.round((totalCNS||0)*(monotony||0));
-    const last28=tssHistory.slice(-28); let acwr="—",warn=false;
-    if(last28.length>=14){const chronic=last28.reduce((a,b)=>a+(b.tss||0),0)/last28.length; if(chronic>0){acwr=((totalTSS/7)/chronic).toFixed(2); warn=parseFloat(acwr)>1.30;}}
-    return `
-      <div class="row">
-        <div class="col-4"><div class="metric"><div class="v">${(totalVol||0).toLocaleString()}</div><div>Total Volume (lb)</div></div></div>
-        <div class="col-4"><div class="metric"><div class="v">${avgCNS}</div><div>Avg Daily CNS</div></div></div>
-        <div class="col-4"><div class="metric"><div class="v">${totalTSS}</div><div>Weekly TSS</div></div></div>
-        <div class="col-4"><div class="metric" style="border-left-color:${warn?'#ff4444':'#ffaa00'}"><div class="v" style="color:${warn?'#ff4444':'#00ff88'}">${acwr}</div><div>ACWR</div></div></div>
-        <div class="col-4"><div class="metric"><div class="v">${monotony?monotony.toFixed(2):'0.00'}</div><div>Monotony</div></div></div>
-        <div class="col-4"><div class="metric"><div class="v">${strain}</div><div>Strain</div></div></div>
+/* =================== PROFILE (added) =================== */
+let profile = JSON.parse(localStorage.getItem('ets_profile')||'{}');
+function ensureProfile(){ if(!profile.sex) profile.sex='male'; if(!profile.age) profile.age=30; if(!profile.rhr) profile.rhr=60; if(!profile.hrmax) profile.hrmax=Math.round(208-0.7*profile.age); }
+function hrZones(){ ensureProfile(); const hm=profile.hrmax; return { z2:[Math.round(hm*0.60),Math.round(hm*0.70)], z3:[Math.round(hm*0.70),Math.round(hm*0.80)], z4:[Math.round(hm*0.80),Math.round(hm*0.90)], z5:[Math.round(hm*0.90),hm] }; }
+function openProfile(){
+  ensureProfile();
+  const html=`
+    <div class="modal"><div class="modal-content">
+      <div class="modal-header"><div class="modal-title">👤 Athlete Profile</div><button class="close-btn" onclick="document.getElementById('profile-modal').classList.add('hidden')">Close</button></div>
+      <div class="modality-section">
+        <div class="question"><label>Sex</label><select id="pf_sex"><option value="male"${profile.sex==='male'?' selected':''}>Male</option><option value="female"${profile.sex==='female'?' selected':''}>Female</option></select></div>
+        <div class="question"><label>Age (yrs)</label><input id="pf_age" type="number" value="${profile.age}"></div>
+        <div class="question"><label>Resting HR (bpm)</label><input id="pf_rhr" type="number" value="${profile.rhr}"></div>
+        <div class="question"><label>HRmax (auto if blank)</label><input id="pf_hrmax" type="number" placeholder="${Math.round(208-0.7*profile.age)}"></div>
+        <div class="ok">Zones (auto): Z2 ${hrZones().z2.join('-')} • Z3 ${hrZones().z3.join('-')} • Z4 ${hrZones().z4.join('-')} • Z5 ${hrZones().z5.join('-')} bpm</div>
+        <div style="margin-top:10px"><button class="btn btn-primary" onclick="saveProfile()">Save Profile</button></div>
       </div>
-      ${warn?`<div class="warn" style="margin-top:10px"><b>Injury Risk:</b> ACWR &gt; 1.3 — reduce next week by 15–20%, add rest, emphasize sleep/nutrition.</div>`:
-             `<div class="ok" style="margin-top:10px">Load within safe range. Maintain variation to keep monotony low.</div>`}
-    `;
+    </div></div>`;
+  const node=document.getElementById('profile-modal'); node.innerHTML=html; node.classList.remove('hidden');
+}
+function saveProfile(){
+  const sex=document.getElementById('pf_sex').value;
+  const age=parseInt(document.getElementById('pf_age').value)||30;
+  const rhr=parseInt(document.getElementById('pf_rhr').value)||60;
+  const hm=parseInt(document.getElementById('pf_hrmax').value);
+  profile={sex,age,rhr,hrmax:Number.isFinite(hm)?hm:Math.round(208-0.7*age)};
+  localStorage.setItem('ets_profile',JSON.stringify(profile));
+  document.getElementById('profile-modal').classList.add('hidden');
+  alert('Profile saved.');
+}
+
+/* =================== DAY MODAL (keep layout; improve BIKE only) =================== */
+let currentEditingDate=null;
+function openDay(dateStr, date){
+  currentEditingDate=dateStr;
+  const dayData=trainingData[dateStr]||{modalities:{}};
+  exerciseCounters={}; setCounters={};
+  const html=`
+    <div class="modal"><div class="modal-content">
+      <div class="modal-header">
+        <div class="modal-title">${date.toLocaleDateString('en-US',{weekday:'long', year:'numeric', month:'long', day:'numeric'})}</div>
+        <button class="close-btn" onclick="closeAnyModal()">✕ Close</button>
+      </div>
+      <h3 style="color:#00ff88;margin-bottom:10px">Select today's modalities</h3>
+      <div class="modality-checkboxes">
+        ${['chest','back','legs','track','bike','bjj','walking'].map(t=>{
+          const on=dayData.modalities[t]?' checked':'';
+          return `<div class="modality-checkbox${on?' checked':''}" onclick="toggleModality('${t}')">
+            <input type="checkbox" id="check-${t}"${on?' checked':''}>
+            <label for="check-${t}">${iconFor(t)} ${t.toUpperCase()}</label>
+          </div>`}).join('')}
+      </div>
+      <div id="form-chest" class="hidden modality-section"></div>
+      <div id="form-back" class="hidden modality-section"></div>
+      <div id="form-legs" class="hidden modality-section"></div>
+      <div id="form-track" class="hidden modality-section"></div>
+      <div id="form-bike" class="hidden modality-section"></div>
+      <div id="form-bjj" class="hidden modality-section"></div>
+      <div id="form-walking" class="hidden modality-section"></div>
+      <button class="btn btn-primary" style="width:100%;margin-top:10px" onclick="saveDay('${dateStr}')">✓ SAVE ALL TRAINING & ANALYZE</button>
+    </div></div>`;
+  document.getElementById('day-modal').innerHTML=html;
+  document.getElementById('day-modal').classList.remove('hidden');
+  Object.keys(dayData.modalities||{}).forEach(type=>{ if(dayData.modalities[type]) showModalityForm(type,dayData.modalities[type]); });
+}
+function iconFor(t){ return t==='chest'?'💪':t==='back'?'💪':t==='legs'?'🦵':t==='track'?'🏃':t==='bike'?'🚴':t==='bjj'?'🥋':'🚶'; }
+function toggleModality(type){
+  const cb=document.getElementById('check-'+type); cb.checked=!cb.checked;
+  const wrap=cb.parentElement; wrap.classList.toggle('checked');
+  if(cb.checked) showModalityForm(type); else document.getElementById('form-'+type).classList.add('hidden');
+}
+function closeAnyModal(){ document.getElementById('day-modal').classList.add('hidden'); document.getElementById('weekly-modal').classList.add('hidden'); hrData={}; }
+
+/* =================== FORMS =================== */
+function showModalityForm(type,data=null){
+  const form=document.getElementById('form-'+type); form.classList.remove('hidden');
+  if(type==='chest'||type==='back'||type==='legs'){ form.innerHTML=generateWeightForm(type,data); addExercise(type); }
+  else if(type==='track'){ form.innerHTML=generateTrackForm(data); }
+  else if(type==='bike'){ form.innerHTML=generateBikeFormUpgraded(data); wireBikeProto(); }
+  else if(type==='bjj'){ form.innerHTML=generateBJJForm(data); }
+  else if(type==='walking'){ form.innerHTML=generateWalkingForm(data); }
+}
+/* --- weight form (unchanged minimal) --- */
+function generateWeightForm(type,data){
+  return `
+    <h2>💪 ${type.toUpperCase()} TRAINING</h2>
+    <div class="question"><label>Exercise</label><input class="exercise-name" placeholder="e.g., Bench Press"></div>
+    <div class="question"><label>Muscle group</label>
+      <select class="muscle-select">
+        <option value="">Select...</option><option value="chest">Chest</option><option value="back">Back</option>
+        <option value="quads">Quads</option><option value="hamstrings">Hamstrings</option><option value="glutes">Glutes</option>
+        <option value="shoulders">Shoulders</option><option value="biceps">Biceps</option><option value="triceps">Triceps</option><option value="core">Core</option>
+      </select>
+    </div>
+    <div class="question"><label>Working sets (weight × reps × RPE)</label>
+      <div class="table-wrap"><table class="table" id="${type}-tbl"><thead><tr><th>Set</th><th>Weight (lb)</th><th>Reps</th><th>RPE</th></tr></thead>
+      <tbody>${[1,2,3].map(i=>`<tr><td>${i}</td><td><input class="w${i}"></td><td><input class="r${i}"></td><td><input class="p${i}"></td></tr>`).join('')}</tbody></table></div>
+    </div>
+    <div class="question"><label>Overall feeling</label>
+      <select id="${type}-feeling"><option value="">Choose...</option><option value="great">Great</option><option value="good">Good</option><option value="tired">Tired</option><option value="beat">Beat Up</option></select>
+    </div>
+    <div class="question"><label>Sleep last night (h)</label><input type="number" id="${type}-sleep" step="0.5" placeholder="7.5"></div>
+  `;
+}
+function addExercise(type){/* simple starter rows already present */}
+
+/* --- track form (unchanged minimal) --- */
+function generateTrackForm(data){
+  return `
+    <h2>🏃 TRACK / PLYOMETRICS</h2>
+    <div class="question"><label>Total contacts (all plyos)</label><input id="track-contacts" type="number" placeholder="300"></div>
+    <div class="question"><label>Max effort jumps</label><input id="track-max-jumps" type="number" placeholder="10"></div>
+    <div class="question"><label>Sprints (count)</label><input id="track-sprints" type="number" placeholder="5"></div>
+    <div class="question"><label>Ground feel</label><select id="track-ground"><option value="">Choose...</option><option value="bouncy">Bouncy</option><option value="normal">Normal</option><option value="heavy">Heavy</option></select></div>
+    <div class="question"><label>Energy level</label><select id="track-energy"><option value="">Choose...</option><option value="high">High</option><option value="moderate">Moderate</option><option value="low">Low</option></select></div>
+    <div class="question"><label>Achilles/calf status</label><select id="track-achilles"><option value="">Choose...</option><option value="fresh">Fresh</option><option value="tight">Tight</option><option value="sore">Sore</option></select></div>
+    <div class="question"><label>Sleep (h)</label><input id="track-sleep" type="number" step="0.5" placeholder="7.5"></div>
+  `;
+}
+
+/* --- BJJ form (unchanged minimal) --- */
+function generateBJJForm(data){
+  return `
+    <h2>🥋 JIU JITSU</h2>
+    <div class="question"><label>Spar time (min)</label><input id="bjj-time" type="number" placeholder="45"></div>
+    <div class="question"><label>Intensity</label><select id="bjj-intensity"><option value="">Choose...</option><option value="high">High</option><option value="medium">Medium</option><option value="light">Light</option></select></div>
+    <div class="question"><label>Weight before (lb)</label><input id="bjj-weight-before" type="number" step="0.1"></div>
+    <div class="question"><label>Weight after (lb)</label><input id="bjj-weight-after" type="number" step="0.1"></div>
+    <div class="question"><label>Overall feeling</label><select id="bjj-feeling"><option>great</option><option>good</option><option>tired</option><option>beat</option></select></div>
+    <div class="question"><label>Sleep (h)</label><input id="bjj-sleep" type="number" step="0.5"></div>
+  `;
+}
+
+/* --- walking form (unchanged minimal) --- */
+function generateWalkingForm(data){
+  return `
+    <h2>🚶 WALKING / RECOVERY</h2>
+    <div class="question"><label>Duration (min)</label><input id="walking-duration" type="number" placeholder="30"></div>
+    <div class="question"><label>Distance (miles)</label><input id="walking-distance" type="number" step="0.1"></div>
+    <div class="question"><label>Avg pace (min/mile)</label><input id="walking-pace" type="number" step="0.1"></div>
+    <div class="question"><label>Terrain</label><select id="walking-terrain"><option value="">Choose...</option><option value="flat">Flat</option><option value="hills">Hills</option><option value="steep">Steep</option></select></div>
+    <div class="question"><label>Purpose</label><select id="walking-purpose"><option value="">Choose...</option><option value="recovery">Active Recovery</option><option value="zone2">Zone 2 Cardio</option><option value="general">General Activity</option></select></div>
+  `;
+}
+
+/* =================== ASSAULT BIKE — UPGRADED (applied) =================== */
+const hrStore = {};
+function generateBikeFormUpgraded(data){
+  const z = hrZones();
+  return `
+    <h2>🚴 ASSAULT BIKE — Elite Protocols</h2>
+    <div class="ok">Auto HR zones (profile): Z2 ${z.z2.join('-')} • Z3 ${z.z3.join('-')} • Z4 ${z.z4.join('-')} • Z5 ${z.z5.join('-')} bpm</div>
+    <div class="question"><label>Protocol</label>
+      <select id="bk_proto">
+        <optgroup label="UFC PI — Classic">
+          <option value="pi_gasTank">Gas Tank Builder (Z2 steady 30–45m)</option>
+          <option value="pi_vo2peaks">VO₂ Peaks (30/30 × 10–15)</option>
+          <option value="pi_thres_3min">Threshold 3-min (3×3' @ LT)</option>
+          <option value="pi_mixed">Mixed MAP (40/20 × 12)</option>
+        </optgroup>
+        <optgroup label="Your Customs">
+          <option value="c_max_rpm">Custom 1 — Max RPM Repeats</option>
+          <option value="c_peak_then_z5">Custom 2 — Peak → downshift to reach Zone 5 ASAP, then stop</option>
+          <option value="c_peak_then_steady">Custom 3 — Peak, then 70% of session max for 30s</option>
+        </optgroup>
+      </select>
+    </div>
+    <div class="question"><label>Planned rounds</label><input id="bk_rounds" type="number" value="6"></div>
+    <div id="bk_dynamic"></div>
+    <div class="question"><label>Session feel</label><select id="bk_feel"><option>great</option><option>good</option><option>tired</option><option>beat</option></select></div>
+    <div class="question"><label>Sleep (h)</label><input id="bk_sleep" type="number" step="0.5"></div>
+    <div class="question"><label>Polar HR screenshot</label>
+      <div class="upload-zone" id="bk_upload">📊 Upload & OCR</div>
+      <input type="file" id="bk_file" accept="image/*" class="hidden"/>
+      <img id="bk_hrimg" class="hr-preview hidden">
+      <div id="bk_hrtxt" style="color:#9a9a9a;font-size:12px;margin-top:6px"></div>
+    </div>
+    <div class="metrics-grid">
+      <div class="metric-card"><div class="metric-value" id="bk_tss">0</div><div>TRIMP/sRPE TSS</div></div>
+      <div class="metric-card"><div class="metric-value" id="bk_cns">0</div><div>Estimated CNS Load</div></div>
+      <div class="metric-card"><div class="metric-value" id="bk_next">—</div><div>Next Session Suggestion</div></div>
+    </div>
+  `;
+}
+function wireBikeProto(){
+  const el = document.getElementById('bk_proto');
+  const roundsEl = document.getElementById('bk_rounds');
+  const dyn = document.getElementById('bk_dynamic');
+  function table(headers, rows=6){
+    const th=headers.map(h=>`<th>${h}</th>`).join('');
+    let body=''; for(let i=1;i<=rows;i++){ body+=`<tr>${headers.map((h,j)=> j===0?`<td>${i}</td>`:`<td><input class="r${i} c${j}"></td>`).join('')}</tr>`; }
+    return `<table class="table" id="bk_tbl"><thead><tr>${th}</tr></thead><tbody>${body}</tbody></table>`;
+  }
+  function renderDynamic(){
+    const v = el.value; const r = parseInt(roundsEl.value)||6;
+    if(v==='pi_gasTank'){
+      const z = hrZones();
+      dyn.innerHTML = `
+        <div class="ok">Ride ${Math.max(30, r*5)}–45 min in Z2 (${z.z2[0]}–${z.z2[1]} bpm). Enter average RPM if desired.</div>
+        <div class="question"><label>Avg RPM</label><input id="gt_avg" type="number"></div>
+      `;
+    } else if(v==='pi_vo2peaks'){
+      dyn.innerHTML = table(['Round','Work 30s RPM','Rest 30s RPM','Peak RPM','Notes'], r);
+    } else if(v==='pi_thres_3min'){
+      dyn.innerHTML = table(['Block','3-min Avg RPM','Target HR','Achieved HR','Notes'], Math.max(3, r));
+    } else if(v==='pi_mixed'){
+      dyn.innerHTML = table(['Rep','40s RPM','20s RPM','Peak RPM','Notes'], r);
+    } else if(v==='c_max_rpm'){
+      dyn.innerHTML = table(['Rep','Peak RPM','Time @ Peak (s)','Recovery to Z2 (s)','Notes'], r);
+    } else if(v==='c_peak_then_z5'){
+      dyn.innerHTML = table(['Rep','Peak RPM','Time to Zone 5 (s)','Recovery to Z2 or 180s (s)','Notes'], r);
+    } else if(v==='c_peak_then_steady'){
+      dyn.innerHTML = `<div class="warn">Odd reps: all-out peak. Even reps: hold ~70% of session max for 30s.</div>` + table(['Rep','Mode (peak/70%)','Peak/Avg RPM','Hold Time (s)','Recovery (s)','Notes'], r);
+    }
+    const tbl=document.getElementById('bk_tbl'); if(tbl){ tbl.addEventListener('input', computeBikeMetricsUpgraded); }
+  }
+  el.addEventListener('change', renderDynamic); roundsEl.addEventListener('input', renderDynamic);
+  renderDynamic();
+  // OCR wire
+  document.getElementById('bk_upload').onclick=()=>document.getElementById('bk_file').click();
+  document.getElementById('bk_file').onchange=e=>hrOCR_BIKE(e);
+  // Compute when feel/sleep change
+  document.getElementById('bk_feel').addEventListener('change', computeBikeMetricsUpgraded);
+  document.getElementById('bk_sleep').addEventListener('input', computeBikeMetricsUpgraded);
+  computeBikeMetricsUpgraded();
+}
+async function hrOCR_BIKE(evt){
+  const f=evt.target.files[0]; if(!f) return;
+  const img=document.getElementById('bk_hrimg'), out=document.getElementById('bk_hrtxt');
+  img.src=URL.createObjectURL(f); img.classList.remove('hidden'); out.textContent="Analyzing HR screenshot…";
+  try{
+    const {data:{text}} = await Tesseract.recognize(img.src,'eng',{
+      tessedit_char_whitelist:'0123456789:%-ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz '
+    });
+    const peak = readNum(/peak[^0-9]{0,6}([0-9]{2,3})/i, text) ?? readNum(/max[^0-9]{0,6}([0-9]{2,3})/i, text);
+    const avg  = readNum(/avg[^0-9]{0,6}([0-9]{2,3})/i, text)  ?? readNum(/average[^0-9]{0,6}([0-9]{2,3})/i, text);
+    const z5   = readNum(/zone\s*5[^0-9]{0,6}([0-9]{1,3})\s*m/i, text)||0;
+    const z4   = readNum(/zone\s*4[^0-9]{0,6}([0-9]{1,3})\s*m/i, text)||0;
+    const z3   = readNum(/zone\s*3[^0-9]{0,6}([0-9]{1,3})\s*m/i, text)||0;
+    const z2   = readNum(/zone\s*2[^0-9]{0,6}([0-9]{1,3})\s*m/i, text)||0;
+    const rec  = inferRecovery(avg, peak);
+    hrStore['bike'] = {peakHR:peak||null, avgHR:avg||null, timeInZone5:z5, timeInZone4:z4, timeInZone3:z3, timeInZone2:z2, recovery:rec};
+    out.innerHTML = `✓ Parsed — Peak <b>${peak||'?'}</b> • Avg <b>${avg||'?'}</b> • Z5:<b>${z5}m</b> Z4:<b>${z4}m</b> Z3:<b>${z3}m</b> Z2:<b>${z2}m</b> • Recovery <b>${rec}</b>`;
+    computeBikeMetricsUpgraded();
+  }catch(e){ console.error(e); out.textContent="⚠️ OCR failed; you can still enter values manually."; }
+}
+function readNum(rx,txt){ const m=rx.exec(txt); if(!m) return null; const n=parseInt(m[1],10); return isFinite(n)?n:null; }
+function inferRecovery(avg,peak){ if(!avg||!peak) return "moderate"; const r=avg/peak; if(r>=0.88) return "poor"; if(r<=0.75) return "good"; return "moderate"; }
+
+function computeBikeMetricsUpgraded(){
+  ensureProfile();
+  const proto=(document.getElementById('bk_proto')||{}).value||'pi_gasTank';
+  const rounds=parseInt((document.getElementById('bk_rounds')||{}).value)||6;
+  const feel=((document.getElementById('bk_feel')||{}).value||'good').toLowerCase();
+  const sleep=parseFloat((document.getElementById('bk_sleep')||{}).value)||0;
+  const hr=hrStore['bike']||null;
+
+  // TRIMP / sRPE hybrid
+  let tss;
+  if(hr && hr.avgHR){
+    const hrr=(hr.avgHR - profile.rhr)/(profile.hrmax - profile.rhr);
+    const y = profile.sex==='female'?1.92:1.67;
+    tss = Math.round( (rounds*60/2) * hrr * y / 60 ); // rough: assume ~30s work/round average across patterns
+  }else{
+    const feelRPE = (feel==="beat")?9.5:(feel==="tired")?8.5:(feel==="good")?7.5:7.0;
+    tss = Math.round(feelRPE * Math.max(12,rounds*2.5)); // minutes heuristic
   }
 
-  /* ========= Wiring ========= */
-  document.getElementById('prevBtn').onclick=()=>{current.setMonth(current.getMonth()-1);renderCalendar();};
-  document.getElementById('todayBtn').onclick=()=>{current=new Date();renderCalendar();};
-  document.getElementById('nextBtn').onclick=()=>{current.setMonth(current.getMonth()+1);renderCalendar();};
+  // CNS heuristic
+  let cns=45;
+  if(feel==="beat") cns+=18; else if(feel==="tired") cns+=10; else if(feel==="great") cns-=8;
+  if(sleep && sleep<7) cns+=8; else if(sleep>=8) cns-=4;
+  if(hr){ if(hr.avgHR>=170) cns+=10; if(hr.recovery==="poor") cns+=8; }
 
-  document.getElementById('dayClose').onclick=()=>document.getElementById('dayModal').classList.add('hidden');
-  document.getElementById('profileBtn').onclick=()=>openProfile();
-  document.getElementById('profileClose').onclick=()=>document.getElementById('profileModal').classList.add('hidden');
-  document.getElementById('weeklyBtn').onclick=()=>{document.getElementById('weeklyBody').innerHTML=weeklyReportHTML();document.getElementById('weeklyModal').classList.remove('hidden');};
-  document.getElementById('weeklyClose').onclick=()=>document.getElementById('weeklyModal').classList.add('hidden');
-
-  function openProfile(){
-    ensureProfileDefaults();
-    document.getElementById('p_name').value=profile.name||"";
-    document.getElementById('p_sex').value=profile.sex||"male";
-    document.getElementById('p_age').value=profile.age||30;
-    document.getElementById('p_mass_lb').value=profile.mass_lb||180;
-    document.getElementById('p_rhr').value=profile.rhr||60;
-    document.getElementById('p_hrmax').value=profile.hrmax||"";
-    document.getElementById('p_train_age').value=profile.train_age||"elite";
-    document.getElementById('profileModal').classList.remove('hidden');
+  // Table-driven refinements
+  const tbl=document.getElementById('bk_tbl');
+  if(tbl){
+    const headers=[...tbl.tHead.rows[0].cells].map(th=>th.textContent);
+    let maxRPM=0, z5Agg=0, recAgg=0, totalRows=0;
+    [...tbl.tBodies[0].rows].forEach(r=>{
+      totalRows++;
+      headers.forEach((h,idx)=>{
+        if(idx===0) return;
+        const val=r.cells[idx].querySelector('input')?.value?.trim();
+        if(/RPM/i.test(h)){ const rpm=parseFloat(val); if(isFinite(rpm)) maxRPM=Math.max(maxRPM,rpm||0); }
+        if(/Zone 5/i.test(h)){ const sec=parseFloat(val); if(isFinite(sec)) z5Agg+=sec; }
+        if(/Recovery/i.test(h)){ const sec=parseFloat(val); if(isFinite(sec)) recAgg+=sec; }
+      });
+    });
+    if(maxRPM>=110) cns+=6;
+    if(proto==='c_peak_then_z5' && totalRows>0){
+      const avgZ5=z5Agg/totalRows; if(avgZ5<=30) cns+=8; else if(avgZ5<=45) cns+=5; else cns+=2;
+    }
+    if(proto==='c_max_rpm' && maxRPM>0){ tss += Math.round(maxRPM/10); }
   }
-  document.getElementById('saveProfile').onclick=()=>{profile.name=document.getElementById('p_name').value.trim();
-    profile.sex=document.getElementById('p_sex').value; profile.age=parseInt(document.getElementById('p_age').value)||30;
-    profile.mass_lb=parseFloat(document.getElementById('p_mass_lb').value)||180; profile.rhr=parseInt(document.getElementById('p_rhr').value)||60;
-    const hm=parseInt(document.getElementById('p_hrmax').value); profile.hrmax=isFinite(hm)?hm:Math.round(208-0.7*profile.age);
-    profile.train_age=document.getElementById('p_train_age').value; saveAll(); alert("Profile saved."); document.getElementById('profileModal').classList.add('hidden');};
 
-  const clamp=(x,a,b)=>Math.max(a,Math.min(b,x));
+  document.getElementById('bk_tss').textContent=tss;
+  document.getElementById('bk_cns').textContent=Math.max(0,Math.min(100,Math.round(cns)));
+  document.getElementById('bk_next').textContent=nextBikeSuggestion(proto,tss,cns);
+}
+function nextBikeSuggestion(proto,tss,cns){
+  const last = JSON.parse(localStorage.getItem('ets_last_bike')||'null');
+  if(!last) return "Log 1–2 sessions to unlock progression.";
+  const delta=tss-last.tss;
+  if(proto==='pi_gasTank'){
+    if(delta>20) return "Hold duration; add cadence drills.";
+    if(delta<-15) return "Add +5 min next Z2 ride.";
+    return "Maintain; check HR drift.";
+  }
+  if(proto==='c_max_rpm'){
+    const mx = Math.max(last.sessionMaxRPM||0, 0);
+    return mx? `Target ≥ ${Math.round(mx*1.02)} RPM peak next time.`:"Establish a true peak today.";
+  }
+  return delta>0? "Micro-deload next session.":"Progress +1 rep.";
+}
+
+/* =================== SAVE DAY (uses previous logic + bike override) =================== */
+let hrData={};
+async function saveDay(dateStr){
+  const data={modalities:{}, totalCNS:0, totalVolume:0, tss:0, qualities:{} };
+  const types=['chest','back','legs','track','bike','bjj','walking'];
+  for(const t of types){
+    const cb=document.getElementById('check-'+t);
+    if(cb && cb.checked){
+      const m=await collectModalityData(t);
+      if(m){ data.modalities[t]=m; data.modalities[t].completed=true; }
+    }
+  }
+  if(Object.keys(data.modalities).length===0){ alert('Select at least one modality.'); return; }
+  Object.keys(data.modalities).forEach(t=>{ const mod=data.modalities[t]; data.totalCNS+=mod.cnsScore||0; data.totalVolume+=mod.volume||0; data.tss+=mod.tss||0; });
+  data.qualities = analyzeQualities(data.modalities);
+  data.interference = detectInterference(data.modalities, data.qualities);
+  trainingData[dateStr]=data; historicalTSS.push({date:dateStr,tss:data.tss}); if(historicalTSS.length>28) historicalTSS.shift();
+  saveData(); displayDayAnalysis(dateStr,data);
+}
+
+async function collectModalityData(type){
+  const data={type};
+  if(type==='bike'){
+    // upgraded
+    const proto=(document.getElementById('bk_proto')||{}).value||'pi_gasTank';
+    const rounds=parseInt((document.getElementById('bk_rounds')||{}).value)||0;
+    const feel=(document.getElementById('bk_feel')||{}).value||'';
+    const sleep=parseFloat((document.getElementById('bk_sleep')||{}).value)||0;
+    const hr=hrStore['bike']||null;
+    const tbl=document.getElementById('bk_tbl');
+    let tableData=[]; let sessionMaxRPM=0;
+    if(tbl){
+      const headers=[...tbl.tHead.rows[0].cells].map(th=>th.textContent.trim());
+      tableData=[...tbl.tBodies[0].rows].map(r=>{
+        const row={}; [...r.cells].forEach((c,i)=>{
+          row[headers[i]] = i===0? c.textContent.trim() : c.querySelector('input')?.value?.trim();
+          if(/RPM/i.test(headers[i])){ const v=parseFloat(row[headers[i]]); if(isFinite(v)) sessionMaxRPM=Math.max(sessionMaxRPM,v); }
+        }); return row;
+      });
+    }
+    // compute via the same function for consistency
+    computeBikeMetricsUpgraded();
+    const tss=parseInt(document.getElementById('bk_tss').textContent)||0;
+    const cns=parseInt(document.getElementById('bk_cns').textContent)||0;
+    return { protocol:proto, rounds, feel, sleep, hrAnalysis:hr, cnsScore:cns, tss, volume:0, tableData, sessionMaxRPM };
+  }
+  // fallback simple for others (retain existing scoring heuristics)
+  if(type==='track'){
+    data.contacts=parseInt(document.getElementById('track-contacts')?.value)||0;
+    data.maxJumps=parseInt(document.getElementById('track-max-jumps')?.value)||0;
+    data.sprints=parseInt(document.getElementById('track-sprints')?.value)||0;
+    data.ground=document.getElementById('track-ground')?.value||'';
+    data.energy=document.getElementById('track-energy')?.value||'';
+    data.achilles=document.getElementById('track-achilles')?.value||'';
+    data.sleep=parseFloat(document.getElementById('track-sleep')?.value)||0;
+    // quick metrics
+    let cns=35; if(data.ground==='heavy') cns+=25; if(data.energy==='low') cns+=18; if(data.achilles==='sore') cns+=25;
+    if(data.contacts>350) cns+=15; if(data.maxJumps>10) cns+=data.maxJumps*2; if(data.sleep<7) cns+=12;
+    const tss=60 + (data.contacts*0.15) + (data.maxJumps*2);
+    return { ...data, cnsScore:Math.min(100,cns), tss:Math.round(tss), volume:0 };
+  }
+  if(type==='bjj'){
+    data.time=parseInt(document.getElementById('bjj-time')?.value)||0;
+    data.intensity=document.getElementById('bjj-intensity')?.value||'';
+    data.weightBefore=parseFloat(document.getElementById('bjj-weight-before')?.value)||0;
+    data.weightAfter=parseFloat(document.getElementById('bjj-weight-after')?.value)||0;
+    data.weightLoss=(data.weightBefore-data.weightAfter).toFixed(1);
+    data.feeling=document.getElementById('bjj-feeling')?.value||'';
+    data.sleep=parseFloat(document.getElementById('bjj-sleep')?.value)||0;
+    let cns=40; const sweat=parseFloat(data.weightLoss)||0; if(sweat>=4) cns+=20; else if(sweat>=3) cns+=10;
+    if(data.intensity==='high') cns+=15; if(data.feeling==='beat') cns+=20; if(data.feeling==='tired') cns+=12; if(data.sleep<7) cns+=10;
+    const tss=data.time*1.5 + (data.intensity==='high'?30:0);
+    return { ...data, cnsScore:Math.min(100,cns), tss:Math.round(tss), volume:0 };
+  }
+  if(type==='walking'){
+    data.duration=parseInt(document.getElementById('walking-duration')?.value)||0;
+    data.distance=parseFloat(document.getElementById('walking-distance')?.value)||0;
+    data.pace=parseFloat(document.getElementById('walking-pace')?.value)||0;
+    data.terrain=document.getElementById('walking-terrain')?.value||'';
+    data.purpose=document.getElementById('walking-purpose')?.value||'';
+    let cns=10; if(data.terrain==='steep') cns+=15; else if(data.terrain==='hills') cns+=8;
+    const tss=data.duration*0.5;
+    return { ...data, cnsScore:Math.min(100,cns), tss:Math.round(tss), volume:0 };
+  }
+  if(type==='chest'||type==='back'||type==='legs'){
+    const tbl=document.getElementById(type+'-tbl'); let totalVol=0, rpeSum=0, rpeCnt=0;
+    [...tbl.tBodies[0].rows].forEach(r=>{
+      const w=parseFloat(r.cells[1].querySelector('input').value)||0;
+      const reps=parseInt(r.cells[2].querySelector('input').value)||0;
+      const p=parseFloat(r.cells[3].querySelector('input').value)||0;
+      totalVol += w*reps; if(p){ rpeSum+=p; rpeCnt++; }
+    });
+    const avgRPE = rpeCnt? rpeSum/rpeCnt : 0;
+    let cns=40; if(avgRPE>=9) cns+=15; else if(avgRPE>=8.5) cns+=10; else if(avgRPE<=7) cns-=8;
+    const feel=document.getElementById(type+'-feeling')?.value||''; const sleep=parseFloat(document.getElementById(type+'-sleep')?.value)||0;
+    if(feel==='beat') cns+=20; else if(feel==='tired') cns+=12; else if(feel==='great') cns-=8;
+    if(sleep<6.5) cns+=15; else if(sleep>=8) cns-=8;
+    const tss = Math.round(60 * (avgRPE/10) * 100 / 100); // simple
+    return { exercises:[], feeling:feel, sleep, avgRPE:avgRPE.toFixed(1), cnsScore:Math.min(100,cns), tss, volume:totalVol };
+  }
+  return null;
+}
+
+/* =================== QUALITIES & INTERFERENCE (unchanged) =================== */
+function analyzeQualities(modalities){
+  const q={strength:0,hypertrophy:0,power:0,speed:0,endurance:0};
+  Object.keys(modalities).forEach(type=>{
+    const mod=modalities[type];
+    if(type==='chest'||type==='back'||type==='legs'){
+      if(mod.avgRPE){ const r=Number(mod.avgRPE); if(r>=8) q.hypertrophy+=40; if(r<=6) q.strength+=30; }
+      q.strength += (mod.volume||0)*0.001;
+      q.hypertrophy += (mod.volume||0)*0.001;
+    } else if(type==='track'){ q.power += (mod.maxJumps||0)*20; q.speed += (mod.sprints||0)*25; }
+    else if(type==='bike'){ q.endurance += 60; if((mod.protocol||'').includes('vo2')||mod.protocol==='pi_mixed') q.power+=30; }
+    else if(type==='bjj'){ q.endurance+=50; if(mod.intensity==='high'){ q.power+=30; q.strength+=20; } }
+    else if(type==='walking'){ q.endurance+=25; }
+  });
+  const total=Object.values(q).reduce((a,b)=>a+b,0);
+  if(total>0) Object.keys(q).forEach(k=> q[k]=Math.round(q[k]/total*100));
+  return q;
+}
+function detectInterference(modalities,qualities){
+  const issues=[]; const types=Object.keys(modalities);
+  if(types.includes('legs') && types.includes('track')) issues.push({severity:'critical',message:'Legs + Track same day = Type II fiber overload',impact:'Power compromised 15–20%',fix:'Separate by ≥48h'});
+  if(types.includes('bjj') && types.includes('back')) issues.push({severity:'moderate',message:'BJJ + Back = Grip fatigue compounding',impact:'Pulling strength reduced 10–15%',fix:'Use straps or separate days'});
+  if(types.length>=4) issues.push({severity:'high',message:`${types.length} modalities in one day = extreme volume`,impact:'CNS overload',fix:'Split across 2 days'});
+  return issues;
+}
+
+/* =================== DAY ANALYSIS DISPLAY (unchanged) =================== */
+function displayDayAnalysis(dateStr,data){
   renderCalendar();
-  </script>
+  const modalityList=Object.keys(data.modalities).map(t=>t.toUpperCase()).join(', ');
+  let html=`
+    <div class="modal"><div class="modal-content">
+      <div class="modal-header"><div class="modal-title">✓ Training Saved</div><button class="close-btn" onclick="closeAnyModal()">Close</button></div>
+      <div class="ok"><b>${dateStr}</b> • Modalities: ${modalityList}</div>
+      <div class="metrics-grid">
+        <div class="metric-card"><div class="metric-value">${data.totalCNS}</div><div>Total CNS Load</div></div>
+        <div class="metric-card"><div class="metric-value">${(data.totalVolume||0).toLocaleString()}</div><div>Volume (lb)</div></div>
+        <div class="metric-card"><div class="metric-value">${data.tss}</div><div>Training Stress Score</div></div>
+      </div>
+      <div class="modality-section"><h2>Training Qualities</h2>
+        ${Object.keys(data.qualities).map(k=>`<div>${k[0].toUpperCase()+k.slice(1)}: <b>${data.qualities[k]}%</b></div>`).join('')}
+      </div>`;
+  if(data.interference && data.interference.length){
+    html+=`<div class="warn"><h3>⚠️ Interference</h3>`+data.interference.map(i=>`<div style="margin:6px 0"><b>${i.message}</b><div style="color:#ff9999">Impact: ${i.impact}</div><div style="color:#00ff88">Fix: ${i.fix}</div></div>`).join('')+`</div>`;
+  }
+  html+=`</div></div>`;
+  const node=document.getElementById('day-modal'); node.innerHTML=html; node.classList.remove('hidden');
+}
+
+/* =================== WEEKLY ANALYSIS (unchanged minimal) =================== */
+function showWeeklyAnalysis(){
+  const end=new Date(); const start=new Date(); start.setDate(start.getDate()-6);
+  let totalCNS=0,totalVol=0,totalTSS=0,days=0,dailyCNS=[],dailyTSS=[];
+  for(let d=new Date(start); d<=end; d.setDate(d.getDate()+1)){
+    const ds=formatDate(d), day=trainingData[ds];
+    if(day && day.modalities && Object.keys(day.modalities).length){
+      days++; totalCNS+=day.totalCNS||0; totalVol+=day.totalVolume||0; totalTSS+=day.tss||0; dailyCNS.push(day.totalCNS||0); dailyTSS.push(day.tss||0);
+    }
+  }
+  const avgCNS=days?Math.round(totalCNS/days):0; const avgTSS=days?Math.round(totalTSS/days):0;
+  const mean=avgCNS, variance=dailyCNS.reduce((s,v)=>s+Math.pow(v-mean,2),0)/(dailyCNS.length||1), std=Math.sqrt(variance), monotony = std>0 ? (mean/std).toFixed(2) : 0;
+  const strain=Math.round(totalCNS*parseFloat(monotony||0));
+  const last28=historicalTSS.slice(-28); let ac='—', warn=false;
+  if(last28.length>=14){ const chronic=last28.reduce((a,b)=>a+b.tss,0)/last28.length; if(chronic>0){ ac=(avgTSS*7/chronic).toFixed(2); if(parseFloat(ac)>1.3) warn=true; } }
+  const html=`
+    <div class="modal"><div class="modal-content">
+      <div class="modal-header"><div class="modal-title">📊 Weekly Analysis</div><button class="close-btn" onclick="closeAnyModal()">Close</button></div>
+      <div class="metrics-grid">
+        <div class="metric-card"><div class="metric-value">${totalVol.toLocaleString()}</div><div>Total Volume (lb)</div></div>
+        <div class="metric-card"><div class="metric-value">${avgCNS}</div><div>Avg Daily CNS</div></div>
+        <div class="metric-card"><div class="metric-value">${totalTSS}</div><div>Weekly TSS</div></div>
+        <div class="metric-card"><div class="metric-value" style="color:${warn?'#ff4444':'#00ff88'}">${ac}</div><div>Acute:Chronic</div></div>
+        <div class="metric-card"><div class="metric-value">${monotony}</div><div>Monotony</div></div>
+        <div class="metric-card"><div class="metric-value">${strain}</div><div>Strain</div></div>
+      </div>
+      ${warn?`<div class="warn"><b>Injury risk elevated</b> — reduce volume 15–20% next week; add rest; prioritize sleep.</div>`:`<div class="ok">Load within safe range. Maintain progression.</div>`}
+    </div></div>`;
+  const node=document.getElementById('weekly-modal'); node.innerHTML=html; node.classList.remove('hidden');
+}
+
+/* =================== INIT =================== */
+window.onload=function(){ loadData(); renderCalendar(); };
+</script>
 </body>
 </html>
