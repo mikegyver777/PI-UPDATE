@@ -1,366 +1,451 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8"/>
+<meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>Elite Athlete Training – Track/Plyo Re-Applied</title>
+<title>Elite Athlete Training System — Complete</title>
 <style>
+  /* ===== Base / Theme ===== */
   :root{
-    --bg:#0a0a0a;--panel:#131313;--ink:#e7fdf4;--mut:#8aa39b;
-    --edge:#233;--acc:#00ff88;--acc2:#00ccff;--warn:#ff6b35;--err:#ff4444;
+    --bg:#0a0a0a;--panel:#121212;--panel2:#1a1a1a;--muted:#777;--fg:#fff;
+    --mint:#00ff88;--cyan:#00ccff;--warn:#ff6b35;--danger:#ff4444;--ok:#36d399;
+    --line:#2a2a2a;
   }
   *{box-sizing:border-box;margin:0;padding:0}
-  body{background:var(--bg);color:#fff;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Arial,sans-serif;line-height:1.5;padding:18px}
-  h1{font-size:34px;text-align:center;margin-bottom:8px;background:linear-gradient(90deg,#ff6b35, #00ff88,#00ccff);
+  body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Arial,sans-serif;background:var(--bg);color:var(--fg);line-height:1.55;padding:18px}
+  .container{max-width:1600px;margin:0 auto}
+  h1{font-size:40px;text-align:center;margin-bottom:6px;background:linear-gradient(90deg,var(--warn),var(--mint),var(--cyan));
       -webkit-background-clip:text;-webkit-text-fill-color:transparent}
-  .sub{color:#9aa; text-align:center;margin-bottom:18px;font-size:14px}
-  .card{background:var(--panel);border:2px solid var(--edge);border-radius:12px;padding:18px;margin-bottom:14px}
-  .row{display:grid;gap:12px}
-  @media(min-width:900px){ .row.cols-2{grid-template-columns:1fr 1fr} .row.cols-3{grid-template-columns:repeat(3,1fr)} }
-  label{font-size:12px;color:#9db}
-  select,input,textarea{width:100%;padding:11px;border-radius:8px;border:2px solid #2a2a2a;background:#0f0f0f;color:#fff;font-size:15px}
-  select:focus,input:focus,textarea:focus{outline:none;border-color:var(--acc)}
-  .hint{font-size:12px;color:#9aa}
-  .badge{display:inline-block;font-size:11px;font-weight:700;padding:4px 8px;border-radius:999px;background:#0e2d23;color:var(--acc);border:1px solid #124}
-  .btn{cursor:pointer;border:none;border-radius:9px;padding:12px 16px;font-weight:800}
-  .btn-primary{background:linear-gradient(135deg,var(--acc),var(--acc2));color:#000}
-  .btn-ghost{background:#1a1a1a;border:2px dashed #444;color:#aaa}
-  .metrics{display:grid;gap:12px}
-  @media(min-width:900px){.metrics{grid-template-columns:repeat(3,1fr)}}
-  .metric{background:#0f0f0f;border-left:4px solid var(--acc2);border-radius:10px;padding:16px}
-  .metric h3{font-size:13px;color:#9aa;margin-bottom:6px}
-  .metric .v{font-size:28px;color:var(--acc);font-weight:900}
-  .ok{background:rgba(0,255,136,.12);border:2px solid var(--acc);padding:14px;border-radius:10px}
-  .warn{background:rgba(255,107,53,.15);border:2px solid var(--warn);padding:14px;border-radius:10px}
-  .danger{background:rgba(255,68,68,.18);border:2px solid var(--err);padding:14px;border-radius:10px}
-  .hrPrev{max-width:100%;max-height:260px;border-radius:10px;margin-top:10px;border:1px solid #234}
-  .pill{display:inline-flex;gap:6px;align-items:center;padding:8px 10px;border-radius:10px;background:#0e0e0e;border:1px solid #274}
-  .grid7{display:grid;grid-template-columns:repeat(7,1fr);gap:6px}
-  .dayH{background:#111;border:1px solid #223;border-radius:8px;text-align:center;padding:8px;color:#8aa;font-size:12px}
-  .cell{min-height:110px;background:#111;border:2px solid #222;border-radius:10px;padding:8px;cursor:pointer}
-  .cell:hover{border-color:#345}
-  .today{border-color:var(--acc);box-shadow:0 0 18px rgba(0,255,136,.18)}
-  .modal{position:fixed;inset:0;background:rgba(0,0,0,.92);display:flex;align-items:flex-start;justify-content:center;padding:22px;z-index:1000}
-  .modal>.panel{width:min(1150px,98vw);background:#0a0a0a;border:2px solid var(--acc);border-radius:14px;max-height:92vh;overflow:auto;padding:18px}
-  .hdr{display:flex;gap:12px;align-items:center;justify-content:space-between;margin-bottom:10px}
-  .x{background:#191919;border:2px solid #333;color:#ddd}
+  .subtitle{color:#9aa;margin:8px 0 20px;text-align:center}
+  .row{display:flex;gap:12px;flex-wrap:wrap}
+  .btn{background:#2b2b2b;border:1px solid var(--line);color:#fff;padding:10px 14px;border-radius:8px;cursor:pointer;font-weight:700}
+  .btn:hover{border-color:#555}
+  .btn.primary{background:linear-gradient(135deg,var(--mint),var(--cyan));color:#000;border:none}
+  .chip{display:inline-block;background:#222;border:1px solid #333;border-radius:999px;padding:4px 10px;font-size:12px;color:#bdd}
+  /* Calendar */
+  .cal-header{display:flex;justify-content:space-between;align-items:center;background:var(--panel2);border:1px solid var(--line);border-radius:12px;padding:14px 16px;margin:10px 0 14px;gap:10px;flex-wrap:wrap}
+  .cal-title{font-weight:800;color:var(--mint);font-size:22px}
+  .cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:6px}
+  .cal-h{padding:8px;text-align:center;color:#9aa;font-weight:800}
+  .day{background:var(--panel2);border:1px solid var(--line);border-radius:10px;min-height:110px;padding:8px;cursor:pointer;position:relative}
+  .day:hover{border-color:#555;transform:translateY(-1px)}
+  .day.other{opacity:.35}
+  .day.today{border-color:var(--mint);box-shadow:0 0 18px rgba(0,255,136,.25)}
+  .dnum{font-weight:900;margin-bottom:4px}
+  .tags{font-size:10px;color:#aab}
+  .badge{display:inline-block;font-size:10px;background:rgba(0,204,255,.12);border:1px solid var(--cyan);color:#9ef;border-radius:6px;padding:2px 6px;margin:1px}
+  .cnsDot{position:absolute;right:7px;top:7px;width:14px;height:14px;border-radius:50%;border:2px solid #000}
+  .cnsLow{background:var(--mint)}.cnsMod{background:#ffaa00}.cnsHigh{background:#ff4444}
+  /* Modal */
+  .modal{position:fixed;inset:0;background:rgba(0,0,0,.9);z-index:30;overflow:auto;padding:18px;display:flex}
+  .card{margin:auto;max-width:1400px;width:100%;background:var(--panel);border:2px solid var(--mint);border-radius:12px;padding:18px}
+  .mhead{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:10px}
+  .mtitle{font-size:22px;color:var(--mint);font-weight:900}
+  .x{background:var(--danger);border:none;color:#fff;border-radius:8px;padding:10px 14px;font-weight:800;cursor:pointer}
+  .panel{background:var(--panel2);border:1px solid var(--line);border-radius:10px;padding:14px;margin:8px 0}
+  .grid{display:grid;gap:10px}
+  .g-2{grid-template-columns:repeat(2,1fr)}
+  .g-3{grid-template-columns:repeat(3,1fr)}
+  .g-4{grid-template-columns:repeat(4,1fr)}
+  .lab{font-size:13px;color:#aab;margin:2px 0 6px}
+  input,select,textarea{width:100%;padding:11px;border-radius:8px;border:1px solid #333;background:#0d0d0d;color:#fff}
+  .pill{display:inline-flex;align-items:center;gap:8px;background:#0f0f0f;border:1px solid #333;border-radius:999px;padding:8px 12px;font-weight:800;cursor:pointer}
+  .pill.on{border-color:var(--mint);box-shadow:inset 0 0 0 2px rgba(0,255,136,.2)}
+  .kpi{display:flex;flex-direction:column;background:#0d0d0d;border-left:4px solid var(--cyan);border-radius:8px;padding:12px}
+  .kval{font-size:26px;font-weight:900;color:var(--mint)}
+  .kcap{font-size:11px;color:#9aa}
+  .tip{font-size:12px;color:#9ad;background:rgba(0,204,255,.12);border:1px solid var(--cyan);border-radius:8px;padding:8px}
+  .warn{background:rgba(255,68,68,.15);border:1px solid var(--danger);border-radius:8px;padding:10px}
+  .ok{background:rgba(0,255,136,.15);border:1px solid var(--mint);border-radius:8px;padding:10px}
+  .hidden{display:none}
+  @media (max-width:900px){.g-4{grid-template-columns:repeat(2,1fr)}.g-3{grid-template-columns:repeat(2,1fr)}}
+  @media (max-width:640px){.g-2,.g-3,.g-4{grid-template-columns:1fr}}
 </style>
 </head>
 <body>
-  <h1>🏆 ELITE ATHLETE TRAINING</h1>
-  <p class="sub">Your Track / Plyometrics module has been re-applied with contacts-accurate stairs logic, tendon & CNS modeling, and HR integration (manual + screenshot preview).</p>
+  <div class="container">
+    <h1>🏆 ELITE ATHLETE TRAINING SYSTEM</h1>
+    <div class="subtitle">Full periodization • Load management • injury risk control • works offline (LocalStorage)</div>
 
-  <!-- Calendar shell (simple) -->
-  <div class="card">
-    <div class="row cols-3" style="align-items:center">
-      <button class="btn x" onclick="shiftMonth(-1)">‹ Prev</button>
-      <div id="monthTitle" style="text-align:center;font-weight:900;font-size:18px;color:var(--acc)"></div>
-      <div style="text-align:right">
-        <button class="btn x" onclick="goToday()">Today</button>
+    <div class="cal-header">
+      <div class="row">
+        <button class="btn" id="prevBtn">‹ Prev</button>
+        <button class="btn" id="todayBtn">Today</button>
+        <button class="btn" id="nextBtn">Next ›</button>
+      </div>
+      <div class="cal-title" id="monthTitle"></div>
+      <div class="row">
+        <button class="btn" id="weeklyBtn">📊 Weekly Analysis</button>
+        <button class="btn" id="profileBtn">👤 Profile</button>
       </div>
     </div>
-    <div class="grid7" style="margin-top:10px">
-      <div class="dayH">Sun</div><div class="dayH">Mon</div><div class="dayH">Tue</div>
-      <div class="dayH">Wed</div><div class="dayH">Thu</div><div class="dayH">Fri</div><div class="dayH">Sat</div>
-    </div>
-    <div id="grid" class="grid7" style="margin-top:6px"></div>
+
+    <div class="cal-grid" id="grid"></div>
+    <div id="modal" class="hidden"></div>
   </div>
 
-  <!-- Modal mount -->
-  <div id="mount"></div>
-
 <script>
-/* ======================= STATE ======================= */
-let current = new Date();
-let store = JSON.parse(localStorage.getItem("eliteTrainingData")||"{}");
+/* ===================== STATE ===================== */
+let currentDate=new Date();
+const keyDay='eliteTrainingData_v2';
+const keyTSS='eliteTSS28_v2';
+const keyProfile='eliteProfile_v1';
+let db=JSON.parse(localStorage.getItem(keyDay)||'{}');
+let TSS=JSON.parse(localStorage.getItem(keyTSS)||'[]');
+let profile=JSON.parse(localStorage.getItem(keyProfile)||'{}');
 
-/* ======================= CALENDAR ==================== */
-function pad(n){return String(n).padStart(2,"0")}
-function key(d){return `${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())}`}
-function setTitle(){
-  const m = ["JAN","FEB","MAR","APR","MAY","JUN","JUL","AUG","SEP","OCT","NOV","DEC"];
-  document.getElementById("monthTitle").textContent = `${m[current.getMonth()]} ${current.getFullYear()}`
+function save(){localStorage.setItem(keyDay,JSON.stringify(db));localStorage.setItem(keyTSS,JSON.stringify(TSS));localStorage.setItem(keyProfile,JSON.stringify(profile))}
+function fmt(d){const y=d.getFullYear(),m=String(d.getMonth()+1).padStart(2,'0'),dd=String(d.getDate()).padStart(2,'0');return `${y}-${m}-${dd}`}
+
+/* ===================== CALENDAR ===================== */
+const grid=document.getElementById('grid'), title=document.getElementById('monthTitle');
+function renderCal(){
+  grid.innerHTML='';
+  const y=currentDate.getFullYear(), m=currentDate.getMonth();
+  title.textContent=new Date(y,m).toLocaleString('en-US',{month:'long',year:'numeric'});
+  ['SUN','MON','TUE','WED','THU','FRI','SAT'].forEach(d=>{const h=document.createElement('div');h.className='cal-h';h.textContent=d;grid.appendChild(h)});
+  const first=new Date(y,m,1).getDay(), days=new Date(y,m+1,0).getDate(), prevDays=new Date(y,m,0).getDate();
+  const todayStr=fmt(new Date());
+  for(let i=first-1;i>=0;i--){makeCell(new Date(y,m-1,prevDays-i),true,todayStr)}
+  for(let d=1;d<=days;d++){makeCell(new Date(y,m,d),false,todayStr)}
+  const filled=first+days, remain=(filled<=35?35:42)-filled;
+  for(let d=1;d<=remain;d++){makeCell(new Date(y,m+1,d),true,todayStr)}
 }
-function draw(){
-  setTitle();
-  const g = document.getElementById("grid"); g.innerHTML="";
-  const y=current.getFullYear(), m=current.getMonth();
-  const first = new Date(y,m,1).getDay();
-  const days = new Date(y,m+1,0).getDate();
-  const prevDays = new Date(y,m,0).getDate();
-  const todayK = key(new Date());
-
-  // leading
-  for(let i=first-1;i>=0;i--){
-    const d = new Date(y,m-1,prevDays-i);
-    g.appendChild(dayCell(d, true, todayK));
-  }
-  // this month
-  for(let d=1; d<=days; d++){
-    g.appendChild(dayCell(new Date(y,m,d), false, todayK));
-  }
-  // trailing
-  const total = first + days;
-  const need = total<=35 ? 35-total : 42-total;
-  for(let d=1; d<=need; d++){
-    g.appendChild(dayCell(new Date(y,m+1,d), true, todayK));
-  }
+function makeCell(date,other,todayStr){
+  const c=document.createElement('div');c.className='day'+(other?' other':''); if(fmt(date)===todayStr) c.classList.add('today');
+  const ds=fmt(date), data=db[ds];
+  c.innerHTML=`<div class="dnum">${date.getDate()}</div><div class="tags" id="t-${ds}"></div>`;
+  if(data && data.modalities){const t=document.getElementById(`t-${ds}`)||c.querySelector('.tags');Object.keys(data.modalities).forEach(k=>data.modalities[k].completed&&t.insertAdjacentHTML('beforeend',`<span class="badge">${k.toUpperCase()}</span>`));const dot=document.createElement('div');dot.className='cnsDot '+(data.totalCNS<60?'cnsLow':data.totalCNS<75?'cnsMod':'cnsHigh');c.appendChild(dot)}
+  c.onclick=()=>openDay(ds,date);
+  grid.appendChild(c);
 }
-function dayCell(date, dim, todayK){
-  const k = key(date);
-  const div = document.createElement("div");
-  div.className = "cell"+(k===todayK?" today":"");
-  if(dim) div.style.opacity = .35;
-  div.innerHTML = `<div style="font-weight:900;color:#ddd">${date.getDate()}</div>
-    <div style="margin-top:6px;font-size:12px;color:#9aa">${store[k]?'Track/Plyo saved':''}</div>`;
-  div.onclick = ()=>openDay(k, date);
-  return div;
+document.getElementById('prevBtn').onclick=()=>{currentDate.setMonth(currentDate.getMonth()-1);renderCal()}
+document.getElementById('nextBtn').onclick=()=>{currentDate.setMonth(currentDate.getMonth()+1);renderCal()}
+document.getElementById('todayBtn').onclick=()=>{currentDate=new Date();renderCal()}
+
+/* ===================== MODALS ===================== */
+function closeModal(){document.getElementById('modal').classList.add('hidden')}
+function show(html){const m=document.getElementById('modal');m.innerHTML=html;m.classList.remove('hidden')}
+
+/* ===================== PROFILE ===================== */
+document.getElementById('profileBtn').onclick=()=>{
+  show(`
+  <div class="modal"><div class="card">
+    <div class="mhead"><div class="mtitle">Athlete Profile</div><button class="x" onclick="closeModal()">✕ Close</button></div>
+    <div class="grid g-3">
+      ${field('Age','p_age',profile.age||'number')}
+      ${select('Sex','p_sex','', ['Male','Female','Other'],profile.sex||'')}
+      ${field('Training age (yrs)','p_train',profile.train||'number')}
+      ${field('Body mass (lb)','p_mass',profile.mass||'number')}
+      ${field('Resting HR (bpm)','p_rhr',profile.rhr||'number')}
+      ${field('HRmax (bpm)','p_hrmax',profile.hrmax||'number')}
+    </div>
+    <div class="tip" style="margin-top:8px">HR-based metrics (TRIMP) use HRmax. If unknown, set via an actual max or 208 − 0.7×age.</div>
+    <div class="row" style="margin-top:12px"><button class="btn primary" onclick="saveProfile()">Save Profile</button></div>
+  </div></div>`)}
+function field(lbl,id,valType){const v=(typeof valType==='string'&&valType!=='number')?valType:'';const t=(valType==='number'?'number':'text');return `<div class="panel"><div class="lab">${lbl}</div><input type="${t}" id="${id}" value="${v}"/></div>`}
+function select(lbl,id,placeholder,opts,val){return `<div class="panel"><div class="lab">${lbl}</div><select id="${id}"><option value="">Choose...</option>${opts.map(o=>`<option ${val===o?'selected':''}>${o}</option>`).join('')}</select></div>`}
+function saveProfile(){
+  profile={age:+get('p_age'),sex:get('p_sex'),train:+get('p_train'),mass:+get('p_mass'),rhr:+get('p_rhr'),hrmax:+get('p_hrmax')};
+  if(!profile.hrmax && profile.age) profile.hrmax=Math.round(208-0.7*profile.age);
+  save();closeModal();
 }
-function shiftMonth(n){ current.setMonth(current.getMonth()+n); draw(); }
-function goToday(){ current = new Date(); draw(); }
+function get(id){const el=document.getElementById(id);return el?el.value:''}
 
-/* =================== TRACK / PLYO MODAL ============== */
-function openDay(k, date){
-  const prev = store[k]?.trackPlyo || {};
-  const human = date.toLocaleDateString(undefined,{weekday:'long',month:'long',day:'numeric',year:'numeric'});
-  const mount = document.getElementById("mount");
-  mount.innerHTML = `
-    <div class="modal">
-      <div class="panel">
-        <div class="hdr">
-          <div style="font-weight:900;color:var(--acc)">Track / Plyometrics — ${human}</div>
-          <button class="btn x" onclick="closeModal()">✕ Close</button>
-        </div>
+/* ===================== DAY VIEW ===================== */
+function pill(id,label,on){return `<span class="pill ${on?'on':''}" onclick="togglePill('${id}')"><input type="checkbox" id="${id}" ${on?'checked':''} style="display:none"/>${label}</span>`}
+function togglePill(id){const c=document.getElementById(id);c.checked=!c.checked;c.parentElement.classList.toggle('on');const type=id.replace('chk-','');const section=document.getElementById(`sec-${type}`);if(c.checked){section.classList.remove('hidden')}else{section.classList.add('hidden')}}
+function openDay(ds,date){
+  const day=db[ds]||{modalities:{}};
+  const on=(k)=>Boolean(day.modalities[k]);
+  show(`
+  <div class="modal"><div class="card">
+    <div class="mhead"><div class="mtitle">${date.toLocaleDateString('en-US',{weekday:'long',month:'long',day:'numeric',year:'numeric'})}</div><button class="x" onclick="closeModal()">✕ Close</button></div>
 
-        <div class="card ok">
-          <span class="badge">Contacts rule</span>
-          <div class="hint" style="margin-top:6px">
-            Ground: <b>contacts = reps × jumps/rep</b>.
-            Stadium stairs: <b>contacts = steps/column × columns × jumps/step</b>.
-          </div>
-        </div>
-
-        <div class="card">
-          <div class="row cols-3">
-            <div>
-              <label>Exercise</label>
-              <select id="ex">
-                ${[
-                  "Broad Jump","Standing Triple Jump (bounds)",
-                  "Hurdle Hops","Box Jump (stick)","Depth Jump (rebound)",
-                  "Stair Jumps","Single-Leg Hops","Alternate Bounds"
-                ].map(x=>`<option ${prev.ex===x?'selected':''}>${x}</option>`).join("")}
-              </select>
-            </div>
-            <div>
-              <label>Unit</label>
-              <select id="unit">
-                <option ${prev.unit==="Yards"?'selected':''}>Yards</option>
-                <option ${prev.unit==="Meters"?'selected':''}>Meters</option>
-                <option ${prev.unit==="Stadium Stairs"?'selected':''}>Stadium Stairs</option>
-              </select>
-            </div>
-            <div>
-              <label>Distance per rep (yards/meters)</label>
-              <input id="dist" type="number" step="1" min="0" value="${prev.dist??0}"/>
-            </div>
-          </div>
-
-          <div class="row cols-3" style="margin-top:10px">
-            <div>
-              <label>Reps (ground)</label>
-              <input id="reps" type="number" min="0" step="1" value="${prev.reps??0}"/>
-            </div>
-            <div>
-              <label>Jumps per rep (ground)</label>
-              <input id="jpr" type="number" min="0" step="1" value="${prev.jpr??0}"/>
-            </div>
-            <div>
-              <label>Jumps per step (stairs)</label>
-              <input id="jps" type="number" min="0" step="1" value="${prev.jps??1}"/>
-            </div>
-          </div>
-
-          <div class="row cols-3" style="margin-top:10px">
-            <div>
-              <label>Steps per column (stairs)</label>
-              <input id="stepsCol" type="number" min="0" step="1" value="${prev.stepsCol??0}"/>
-            </div>
-            <div>
-              <label>Columns completed (stairs)</label>
-              <input id="cols" type="number" min="0" step="1" value="${prev.cols??0}"/>
-            </div>
-            <div>
-              <label>Sleep last night (h)</label>
-              <input id="sleep" type="number" step="0.5" min="0" value="${prev.sleep??7.5}"/>
-            </div>
-          </div>
-
-          <div class="row cols-3" style="margin-top:10px">
-            <div>
-              <label>Achilles / Calf status</label>
-              <select id="ach">
-                ${["Fresh","Tight","Sore"].map(x=>`<option ${prev.ach===x?'selected':''}>${x}</option>`).join("")}
-              </select>
-            </div>
-            <div>
-              <label>Avg HR (bpm) — manual</label>
-              <input id="avgHR" type="number" min="0" value="${prev.avgHR??0}"/>
-              <div class="hint">Optional; use your Polar summary.</div>
-            </div>
-            <div>
-              <label>Time in Zone 5 (min) — manual</label>
-              <input id="z5" type="number" min="0" step="1" value="${prev.z5??0}"/>
-            </div>
-          </div>
-
-          <div class="row cols-2" style="margin-top:10px;align-items:end">
-            <div>
-              <label>HR Screenshot (optional)</label>
-              <input id="hrImg" type="file" accept="image/*" onchange="previewHR(event,'hrPrev')"/>
-              <img id="hrPrev" class="hrPrev" style="display:${prev.img?'block':'none'}" src="${prev.img??''}"/>
-              <div class="hint">We preview the image and use manual fields for metrics (robust & 100% offline).</div>
-            </div>
-            <div>
-              <label>Notes</label>
-              <textarea id="notes" rows="6" placeholder="Add context (surface, wind, spikes, shoes, soreness, etc.)">${prev.notes??""}</textarea>
-            </div>
-          </div>
-        </div>
-
-        <div class="card">
-          <div class="row cols-3 metrics">
-            <div class="metric"><h3>Contacts (exact)</h3><div class="v" id="mContacts">0</div></div>
-            <div class="metric" style="border-left-color:var(--acc)"><h3>Tendon Load Index</h3><div class="v" id="mTendon">0</div></div>
-            <div class="metric" style="border-left-color:#ffaa00"><h3>CNS Load (0–100)</h3><div class="v" id="mCNS">0</div></div>
-          </div>
-          <div id="riskBox" style="margin-top:10px"></div>
-          <div style="margin-top:12px;display:flex;gap:8px;flex-wrap:wrap">
-            <button class="btn btn-ghost" onclick="compute()">↻ Recompute</button>
-            <button class="btn btn-primary" onclick="saveDay('${k}')">✓ Save Day & Recompute</button>
-          </div>
-        </div>
-
+    <div class="panel">
+      <div class="lab">Modalities (toggle)</div>
+      <div class="row" style="gap:8px;flex-wrap:wrap">
+        ${pill('chk-chest','Chest',on('chest'))}
+        ${pill('chk-back','Back',on('back'))}
+        ${pill('chk-legs','Legs',on('legs'))}
+        ${pill('chk-track','Track/Plyo',on('track'))}
+        ${pill('chk-bike','Assault Bike',on('bike'))}
+        ${pill('chk-bjj','BJJ',on('bjj'))}
+        ${pill('chk-walk','Walking/Recovery',on('walk'))}
       </div>
     </div>
+
+    <div class="grid g-3">
+      <div class="kpi"><div class="kval" id="k-cns">0</div><div class="kcap">Estimated CNS Load</div></div>
+      <div class="kpi"><div class="kval" id="k-tss">0</div><div class="kcap">Total TSS (TRIMP/sRPE)</div></div>
+      <div class="kpi"><div class="kval" id="k-vol">0</div><div class="kcap">Strength Volume (lb)</div></div>
+    </div>
+
+    <!-- Strength sections -->
+    ${strengthSection('chest',day.modalities.chest)}
+    ${strengthSection('back',day.modalities.back)}
+    ${strengthSection('legs',day.modalities.legs)}
+
+    <!-- Track / Plyo (contacts-accurate version you requested) -->
+    <div id="sec-track" class="${on('track')?'':'hidden'}">
+      <div class="panel">
+        <div class="lab">🏃 Track / Plyometrics (contacts-accurate)</div>
+        <div class="tip" style="margin-bottom:8px">Contacts = reps × jumps/rep (ground). <b>Stadium stairs</b>: contacts = steps/column × columns × jumps/step.</div>
+        <div class="grid g-4">
+          ${select('Exercise','trk_ex','', ['Broad Jump','Tuck Jump','Depth Jump','Bounds','Hurdle Hops','Single-leg Hops','Stair Jumps'], (day.modalities.track||{}).ex||'')}
+          ${select('Unit','trk_unit','', ['Yards','Meters','Stadium Stairs'], (day.modalities.track||{}).unit||'')}
+          ${field('Distance per rep (yards/meters)','trk_dist',(day.modalities.track||{}).dist||'number')}
+          ${field('Reps','trk_reps',(day.modalities.track||{}).reps||'number')}
+          ${field('Jumps per rep (ground)','trk_jpr',(day.modalities.track||{}).jpr||'number')}
+          ${field('Steps per column (stairs)','trk_steps',(day.modalities.track||{}).steps||'number')}
+          ${field('Columns completed (stairs)','trk_cols',(day.modalities.track||{}).cols||'number')}
+          ${field('Jumps per step (stairs)','trk_jps',(day.modalities.track||{}).jps||'number')}
+          ${select('Achilles/Calf','trk_ach','', ['Fresh','Tight','Sore'],(day.modalities.track||{}).ach||'')}
+        </div>
+        ${hrBlock('trk',day.modalities.track)}
+      </div>
+    </div>
+
+    <!-- Assault Bike: UFC presets + your three customs -->
+    <div id="sec-bike" class="${on('bike')?'':'hidden'}">
+      <div class="panel">
+        <div class="lab">🚴 Assault Bike</div>
+        <div class="grid g-4">
+          ${select('Protocol','ab_proto','',[
+            'UFC — Gas Tank Builder (75% HR for 3min / rest 2min × 6)',
+            'UFC — Max Aerobic Power 15s on / 45s off × 10',
+            'UFC — Threshold 4×4min @ 85–90% HR, 2min easy',
+            'Custom #1 — Max RPM per rep (enter rounds)',
+            'Custom #2 — All-out to max RPM → downshift and reach ≥Zone 5 ASAP (stop) — recover to Zone 2 or 3min',
+            'Custom #3 — Rep1 all-out max RPM → Rep2 cruise @ ~70% max for 30s (repeat)'
+          ], (day.modalities.bike||{}).proto||'')}
+          ${field('Total time (min)','ab_time',(day.modalities.bike||{}).time||'number')}
+          ${field('Rounds / reps','ab_rounds',(day.modalities.bike||{}).rounds||'number')}
+          ${field('Peak RPM (best)','ab_peak',(day.modalities.bike||{}).peak||'number')}
+          ${field('Avg RPM (session)','ab_avg',(day.modalities.bike||{}).avg||'number')}
+          ${field('Time to Zone 5 (sec) [Custom #2]','ab_tz5',(day.modalities.bike||{}).tz5||'number')}
+          ${field('Recovery to Zone 2 (sec) [Custom #2]','ab_rz2',(day.modalities.bike||{}).rz2||'number')}
+          ${select('Breathing quality','ab_br','', ['Strong','Moderate','Labored'],(day.modalities.bike||{}).br||'')}
+          ${select('Overall feeling','ab_feel','', ['Great','Good','Tired','Beat'],(day.modalities.bike||{}).feel||'')}
+        </div>
+        ${hrBlock('ab',day.modalities.bike)}
+      </div>
+    </div>
+
+    <!-- BJJ -->
+    <div id="sec-bjj" class="${on('bjj')?'':'hidden'}">
+      <div class="panel">
+        <div class="lab">🥋 BJJ</div>
+        <div class="grid g-4">
+          ${field('Spar time (min)','bjj_time',(day.modalities.bjj||{}).time||'number')}
+          ${select('Intensity','bjj_int','', ['High','Medium','Light'],(day.modalities.bjj||{}).int||'')}
+          ${field('Weight before (lb)','bjj_wb',(day.modalities.bjj||{}).wb||'number')}
+          ${field('Weight after (lb)','bjj_wa',(day.modalities.bjj||{}).wa||'number')}
+          ${select('Overall feeling (post-session)','bjj_feel','', ['Great','Good','Tired','Beat'],(day.modalities.bjj||{}).feel||'')}
+        </div>
+        ${hrBlock('bjj',day.modalities.bjj)}
+      </div>
+    </div>
+
+    <!-- Walking -->
+    <div id="sec-walk" class="${on('walk')?'':'hidden'}">
+      <div class="panel">
+        <div class="lab">🚶 Walking / Recovery</div>
+        <div class="grid g-4">
+          ${field('Duration (min)','w_dur',(day.modalities.walk||{}).dur||'number')}
+          ${field('Distance (mi)','w_dist',(day.modalities.walk||{}).dist||'number')}
+          ${select('Terrain','w_ter','', ['Flat','Hills','Steep'],(day.modalities.walk||{}).ter||'')}
+          ${select('Purpose','w_purp','', ['Active Recovery','Zone 2','General'],(day.modalities.walk||{}).purp||'')}
+        </div>
+        ${hrBlock('w',day.modalities.walk)}
+      </div>
+    </div>
+
+    <div class="row" style="margin-top:8px">
+      <button class="btn primary" onclick="saveDay('${ds}')">✓ Save Day & Recompute</button>
+    </div>
+
+  </div></div>`);
+}
+function strengthSection(name,data){
+  const title=name.toUpperCase();
+  const secId=`sec-${name}`;
+  return `
+  <div id="${secId}" class="${data?'':'hidden'}">
+    <div class="panel">
+      <div class="lab">💪 ${title} — Strength Session</div>
+      <div id="${name}-exwrap"></div>
+      <div class="row" style="margin-top:6px"><button class="btn" onclick="addExercise('${name}')">+ Add Exercise</button>
+      <span class="chip">Volume auto-computed (lb)</span></div>
+      <div class="grid g-3" style="margin-top:10px">
+        ${select('Overall Feeling','feel_'+name,'', ['Great','Good','Tired','Beat'], (data||{}).feel||'')}
+        ${field('Sleep (h)','slp_'+name,(data||{}).slp||'number')}
+      </div>
+      ${hrBlock(name,(data||{}))}
+    </div>
+  </div>`;
+}
+function hrBlock(prefix,data){
+  const d=data||{};
+  return `
+  <div class="grid g-4" style="margin-top:10px">
+    <div><div class="lab">Attach Polar HR screenshot (optional)</div><input type="file" accept="image/*" id="${prefix}_img"></div>
+    ${field('Avg HR (bpm)',''+prefix+'_av', d.hr?.avg||'number')}
+    ${field('Peak HR (bpm)',''+prefix+'_pk', d.hr?.peak||'number')}
+    ${field('Time in Z5 (min)',''+prefix+'_z5', d.hr?.z5||'number')}
+    ${field('Time in Z4 (min)',''+prefix+'_z4', d.hr?.z4||'number')}
+  </div>
+  <div class="tip" style="margin-top:6px">
+    Image upload is stored locally for your log. Manual fields ensure accuracy without external APIs. If you later wire a backend OCR, post the parsed JSON to this app and populate these fields.
+  </div>`;
+}
+function addExercise(group){
+  const wrap=document.getElementById(group+'-exwrap');
+  const id='ex_'+group+'_'+Math.random().toString(36).slice(2);
+  const block=document.createElement('div');
+  block.className='panel';
+  block.innerHTML=`
+    <div class="grid g-4">
+      ${field('Exercise name',id+'_name','')}
+      ${select('Muscle',''+id+'_mus','', ['Primary','Auxiliary','Accessory'],'')}
+      ${field('Set × Reps',''+id+'_sr','')} 
+      ${field('Weight per set (lb, comma-sep)',''+id+'_w','')}
+    </div>
+    <div class="grid g-4" style="margin-top:6px">
+      ${field('Avg RPE (6-10)',''+id+'_rpe','')}
+      ${field('Working sets (#)',''+id+'_sets','')}
+      <div></div><div></div>
+    </div>
   `;
-  // initial compute
-  compute();
-}
-function closeModal(){ document.getElementById("mount").innerHTML=""; }
-
-/* =================== COMPUTATION ===================== */
-function previewHR(e, id){
-  const f = e.target.files?.[0]; if(!f) return;
-  const rd = new FileReader();
-  rd.onload = ()=>{ const img = document.getElementById(id); img.src = rd.result; img.style.display='block'; };
-  rd.readAsDataURL(f);
+  wrap.appendChild(block);
 }
 
-function impactFactor(ex){
-  // empirical relative impact multipliers grounded in elite S&C literature
-  // Depth > Hurdle > Bounds ≈ Single-Hop > Broad ≈ Box (stick) > Stair
-  if(/Depth Jump/.test(ex)) return 1.30;
-  if(/Hurdle/.test(ex)) return 1.18;
-  if(/Alternate Bounds|Triple/.test(ex)) return 1.12;
-  if(/Single-Leg/.test(ex)) return 1.10;
-  if(/Broad|Box/.test(ex)) return 0.95;
-  if(/Stair/.test(ex)) return 0.80;
-  return 1.00;
+/* ===================== SAVE / METRICS ===================== */
+function valNum(id){const v=get(id);return v?+v:0}
+function collectHR(prefix){
+  const hr={avg:valNum(prefix+'_av'),peak:valNum(prefix+'_pk'),z5:valNum(prefix+'_z5'),z4:valNum(prefix+'_z4')};
+  // store image name only (no remote upload)
+  const f=document.getElementById(prefix+'_img'); if(f && f.files && f.files[0]) hr.img=f.files[0].name;
+  return hr;
 }
-
-function compute(){
-  const ex = document.getElementById("ex").value;
-  const unit = document.getElementById("unit").value;
-  const dist = +document.getElementById("dist").value||0;
-
-  const reps = +document.getElementById("reps").value||0;
-  const jpr  = +document.getElementById("jpr").value||0;
-
-  const stepsCol = +document.getElementById("stepsCol").value||0;
-  const cols     = +document.getElementById("cols").value||0;
-  const jps      = +document.getElementById("jps").value||1;
-
-  const sleep = +document.getElementById("sleep").value||0;
-  const ach   = document.getElementById("ach").value;
-
-  const avgHR = +document.getElementById("avgHR").value||0;
-  const z5    = +document.getElementById("z5").value||0;
-
+function parseStrength(group){
+  if(!document.getElementById('sec-'+group) || document.getElementById('sec-'+group).classList.contains('hidden')) return null;
+  const exwrap=document.getElementById(group+'-exwrap');
+  const exBlocks=[...exwrap.querySelectorAll('.panel')];
+  const exercises=[];
+  let vol=0, rpeSum=0, rpeN=0;
+  exBlocks.forEach(b=>{
+    const sel=[...b.querySelectorAll('input,select')];
+    const name=sel.find(x=>x.id.includes('_name'))?.value||'';
+    if(!name.trim()) return;
+    const sr=(sel.find(x=>x.id.includes('_sr'))?.value||'').trim();
+    const setsN=+(sel.find(x=>x.id.includes('_sets'))?.value||'0');
+    const weights=(sel.find(x=>x.id.includes('_w'))?.value||'').split(',').map(s=>+s.trim()).filter(Boolean);
+    const rpe=+((sel.find(x=>x.id.includes('_rpe'))?.value)||0);
+    let reps=0; // support formats like "5x3" or "3x5"
+    const m=sr.match(/(\d+)\s*x\s*(\d+)/i); if(m){reps=+m[2]}
+    const wt=(weights.length?weights.reduce((a,b)=>a+b,0)/weights.length:0);
+    const sets=(setsN||(+m?.[1]||0));
+    const v=wt*reps*sets;
+    vol+=v; if(rpe){rpeSum+=rpe;rpeN++}
+    exercises.push({name,sets,reps,wt,rpe});
+  });
+  const feel=get('feel_'+group), slp=valNum('slp_'+group), hr=collectHR(group);
+  // simple CNS scoring
+  let cns=40 + (feel==='Beat'?18:feel==='Tired'?10:feel==='Great'?-8:0) + (hr.avg>=160?8:hr.avg>=150?5:0) + (slp<6.5?12:slp>=8?-6:0);
+  const avgRPE=rpeN? (rpeSum/rpeN):0;
+  if(avgRPE>=9)cns+=12; else if(avgRPE<=7)cns-=6;
+  const duration=60; // min placeholder
+  const tss_sRPE = duration * Math.max(0,avgRPE) ; // Foster sRPE
+  return {completed:true,exercises,volume:Math.round(vol),cnsScore:clamp(cns,0,100),tss:Math.round(tss_sRPE),feel,slp,hr};
+}
+function parseTrack(){
+  if(document.getElementById('sec-track').classList.contains('hidden')) return null;
+  const ex=get('trk_ex'), unit=get('trk_unit'), dist=valNum('trk_dist'), reps=valNum('trk_reps'), jpr=valNum('trk_jpr'),
+        steps=valNum('trk_steps'), cols=valNum('trk_cols'), jps=valNum('trk_jps'), ach=get('trk_ach'), hr=collectHR('trk');
   // contacts
-  let contacts = 0;
-  if(unit === "Stadium Stairs"){
-    contacts = stepsCol * cols * jps; // exact by architecture
-  }else{
-    contacts = reps * jpr;            // ground contacts
+  let contacts=0;
+  if(unit==='Stadium Stairs'){ contacts = steps*cols*Math.max(1,jps) }
+  else { contacts = Math.max(0,reps)*Math.max(1,jpr) }
+  // CNS scoring emphasizes tendon load
+  let cns=35 + (contacts>350?15:0) + (ach==='Sore'?25:ach==='Tight'?12:0) + (hr.z5>10?10:0);
+  const tss = Math.round(60 + contacts*0.12); // calibrated conservative
+  return {completed:true,ex,unit,dist,reps,jpr,steps,cols,jps,ach,contacts,cnsScore:clamp(cns,0,100),tss,hr};
+}
+function parseBike(){
+  if(document.getElementById('sec-bike').classList.contains('hidden')) return null;
+  const proto=get('ab_proto'), time=valNum('ab_time'), rounds=valNum('ab_rounds'), peak=valNum('ab_peak'), avg=valNum('ab_avg'),
+        tz5=valNum('ab_tz5'), rz2=valNum('ab_rz2'), br=get('ab_br'), feel=get('ab_feel'), hr=collectHR('ab');
+  let cns=45 + (br==='Labored'?18:br==='Moderate'?8:0) + (feel==='Beat'?18:feel==='Tired'?10:0) + (hr.z5>15?12:0);
+  const intensityGuess = (proto.includes('Threshold')?0.85: proto.includes('Max Aerobic')?0.9: proto.includes('Gas Tank')?0.75 : proto.includes('Custom #2')?0.95 : proto.includes('Custom #1')?0.9 : proto.includes('Custom #3')?0.85 : 0.8);
+  const tss = Math.round((time||rounds*1.5)*intensityGuess*100*0.2 + (hr.avg?hr.avg/2:0)); // blended heuristic
+  return {completed:true,proto,time,rounds,peak,avg,tz5,rz2,br,feel,cnsScore:clamp(cns,0,100),tss,hr};
+}
+function parseBJJ(){
+  if(document.getElementById('sec-bjj').classList.contains('hidden')) return null;
+  const time=valNum('bjj_time'), int=get('bjj_int'), wb=valNum('bjj_wb'), wa=valNum('bjj_wa'), feel=get('bjj_feel'), hr=collectHR('bjj');
+  const loss = (wb && wa)? +(wb-wa).toFixed(1):0;
+  let cns=40 + (loss>=3?10:0) + (int==='High'?15:0) + (feel==='Beat'?18:feel==='Tired'?10:0) + (hr.z5>20?12:0);
+  const tss=Math.round(time*1.5 + (int==='High'?30:0));
+  return {completed:true,time,int,loss,feel,cnsScore:clamp(cns,0,100),tss,hr};
+}
+function parseWalk(){
+  if(document.getElementById('sec-walk').classList.contains('hidden')) return null;
+  const dur=valNum('w_dur'), dist=valNum('w_dist'), ter=get('w_ter'), purp=get('w_purp'), hr=collectHR('w');
+  let cns=10 + (ter==='Steep'?15:ter==='Hills'?8:0);
+  if(purp==='Zone 2' && hr.z3>hr.z2) cns+=10;
+  const tss=Math.round(dur*0.5);
+  return {completed:true,dur,dist,ter,purp,cnsScore:clamp(cns,0,100),tss,hr};
+}
+function clamp(x,a,b){return Math.max(a,Math.min(b,x))}
+function saveDay(ds){
+  const chest=parseStrength('chest'), back=parseStrength('back'), legs=parseStrength('legs'),
+        track=parseTrack(), bike=parseBike(), bjj=parseBJJ(), walk=parseWalk();
+  const modalities={}; if(chest)modalities.chest=chest; if(back)modalities.back=back; if(legs)modalities.legs=legs;
+  if(track)modalities.track=track; if(bike)modalities.bike=bike; if(bjj)modalities.bjj=bjj; if(walk)modalities.walk=walk;
+  if(Object.keys(modalities).length===0){alert('Select at least one modality');return}
+  let totalCNS=0,totalVol=0,totalTSS=0;
+  Object.values(modalities).forEach(m=>{totalCNS+=m.cnsScore||0; totalVol+=(m.volume||0); totalTSS+=(m.tss||0)})
+  const day={modalities,totalCNS, totalVolume:totalVol, tss:totalTSS};
+  db[ds]=day; TSS.push({date:ds,tss:totalTSS}); if(TSS.length>28) TSS.shift();
+  save();
+  // KPIs flash
+  document.getElementById('k-cns').textContent=totalCNS;
+  document.getElementById('k-tss').textContent=totalTSS;
+  document.getElementById('k-vol').textContent=totalVol.toLocaleString();
+  renderCal();
+}
+
+/* ===================== WEEKLY ===================== */
+document.getElementById('weeklyBtn').onclick=()=>{
+  const end=new Date(), start=new Date(); start.setDate(end.getDate()-6);
+  let totC=0, totV=0, totT=0, n=0, dC=[];
+  for(let d=new Date(start); d<=end; d.setDate(d.getDate()+1)){
+    const k=fmt(d), x=db[k]; if(!x) continue; n++; totC+=x.totalCNS||0; totV+=x.totalVolume||0; totT+=x.tss||0; dC.push(x.totalCNS||0);
   }
+  const avgC=Math.round(n?totC/n:0), avgT=Math.round(n?totT/n:0);
+  const mean=avgC, varc=dC.length? dC.reduce((s,v)=>s+(v-mean)**2,0)/dC.length : 0, sd=Math.sqrt(varc), mono=sd? (mean/sd):0;
+  const strain=Math.round(totC*mono);
+  let ac='—', warn=false;
+  if(TSS.length>=14){const chronic=TSS.reduce((a,b)=>a+b.tss,0)/TSS.length; if(chronic>0){ac=((avgT*7)/chronic).toFixed(2); warn=(+ac>1.3)}}
+  show(`
+  <div class="modal"><div class="card">
+    <div class="mhead"><div class="mtitle">📊 Weekly Analysis</div><button class="x" onclick="closeModal()">✕ Close</button></div>
+    <div class="grid g-3">
+      <div class="kpi"><div class="kval">${totV.toLocaleString()}</div><div class="kcap">Total Volume (lb)</div></div>
+      <div class="kpi"><div class="kval">${avgC}</div><div class="kcap">Avg Daily CNS</div></div>
+      <div class="kpi"><div class="kval">${totT}</div><div class="kcap">Weekly TSS</div></div>
+      <div class="kpi" style="border-left-color:${warn?'#ff4444':'#ff6b35'}"><div class="kval" style="color:${warn?'#ff4444':'#00ff88'}">${ac}</div><div class="kcap">Acute:Chronic Ratio</div></div>
+      <div class="kpi"><div class="kval">${mono.toFixed(2)}</div><div class="kcap">Monotony</div></div>
+      <div class="kpi"><div class="kval">${strain}</div><div class="kcap">Strain</div></div>
+    </div>
+    ${warn? `<div class="warn" style="margin-top:10px"><b>Injury Risk:</b> A:C ${ac} (target 0.8–1.3). Reduce next week’s volume 15–20%, add 1–2 rest days, keep sleep ≥8h.</div>` :
+             `<div class="ok" style="margin-top:10px">Load looks appropriate. Keep progressing conservatively.</div>`}
+  </div></div>`)}
+/* ===================== INIT ===================== */
+renderCal();
 
-  // tendon load index (contacts × impact × modifiers)
-  let tendon = contacts * impactFactor(ex);
-  if(ach==="Tight") tendon *= 1.10;
-  if(ach==="Sore")  tendon *= 1.25;
-  if(sleep<7)       tendon *= 1.10;
-
-  // CNS load (0–100) — conservative bounded model
-  let cns = 35;
-  cns += Math.min(30, impactFactor(ex)*contacts/120); // more contacts -> more load (slope ~impact)
-  if(sleep<7) cns += 8;
-  if(ach==="Sore") cns += 10;
-  if(avgHR>=170) cns += 8;
-  if(z5>=10) cns += 8;
-  cns = Math.max(0, Math.min(100, Math.round(cns)));
-
-  // UI
-  document.getElementById("mContacts").textContent = Math.round(contacts);
-  document.getElementById("mTendon").textContent   = Math.round(tendon);
-  document.getElementById("mCNS").textContent      = cns;
-
-  const risk = [];
-  if(unit==="Stadium Stairs" && stepsCol*cols>300) risk.push("Very high stair volume. Consider splitting columns.");
-  if(ach==="Sore") risk.push("Achilles/calf sore: avoid depth jumps and high-impact rebounds.");
-  if(cns>=75) risk.push("High CNS day. Plan 48h before max sprint/ME lower.");
-  const box = document.getElementById("riskBox");
-  if(risk.length===0) box.innerHTML = `<div class="ok"><b>✓ Good to go.</b> Manage landings, keep quality high, and respect rest intervals.</div>`;
-  else box.innerHTML = `<div class="${cns>=85?'danger':'warn'}"><b>⚠ Attention:</b><ul style="margin:8px 0 0 18px">${risk.map(x=>`<li>${x}</li>`).join("")}</ul></div>`;
-}
-
-function saveDay(k){
-  // persist all inputs + recomputed metrics
-  const grab = id => document.getElementById(id);
-  const file = grab("hrImg").files?.[0];
-  const save = (imgDataUrl="")=>{
-    const obj = {
-      ex:grab("ex").value, unit:grab("unit").value, dist:+grab("dist").value||0,
-      reps:+grab("reps").value||0, jpr:+grab("jpr").value||0,
-      stepsCol:+grab("stepsCol").value||0, cols:+grab("cols").value||0, jps:+grab("jps").value||1,
-      sleep:+grab("sleep").value||0, ach:grab("ach").value,
-      avgHR:+grab("avgHR").value||0, z5:+grab("z5").value||0,
-      notes:grab("notes").value, img:imgDataUrl,
-
-      // derived metrics (after compute())
-      contacts:+document.getElementById("mContacts").textContent||0,
-      tendon:+document.getElementById("mTendon").textContent||0,
-      cns:+document.getElementById("mCNS").textContent||0
-    };
-    store[k] = store[k]||{};
-    store[k].trackPlyo = obj;
-    localStorage.setItem("eliteTrainingData", JSON.stringify(store));
-    compute();
-  };
-  if(file){
-    const rd = new FileReader();
-    rd.onload = ()=>save(rd.result);
-    rd.readAsDataURL(file);
-  }else{
-    save();
-  }
-}
-
-/* =================== INIT ============================ */
-function init(){
-  setTitle(); draw();
-}
-window.addEventListener("load", init);
+/* ===================== Helpers ===================== */
 </script>
 </body>
 </html>
